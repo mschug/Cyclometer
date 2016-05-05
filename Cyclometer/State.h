@@ -33,7 +33,7 @@ enum StateEnum
 
 class State
 {
-private:
+protected:
 	StateEnum m_state;
 public:
 	State();

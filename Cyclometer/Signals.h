@@ -26,6 +26,7 @@ enum Signal
 	START_WATCHDOG   = 14,
 	STROKE           = 15,
 	TIMEOUT          = 16,
+	NO_SIGNAL        = 17,
 
 	UNKNOWN_SIGNAL   = -1
 };

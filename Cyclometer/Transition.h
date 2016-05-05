@@ -13,7 +13,7 @@
 
 class Transition
 {
-private:
+protected:
 	Signal m_signal;
 	int m_next_state;
 public:

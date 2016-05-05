@@ -5,3 +5,9 @@
  *      Author: mss9627
  */
 
+#include "FullResetState.h"
+
+FullResetState::FullResetState() : State()
+{
+	m_state = FULL_RESET;
+}

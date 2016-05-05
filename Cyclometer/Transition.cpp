@@ -11,7 +11,6 @@ Transition::Transition()
 {
 	m_signal = UNKNOWN_SIGNAL;
 	m_next_state = INVALID_STATE;
-
 }
 
 Transition::Transition(StateEnum next_state, Signal signal)
