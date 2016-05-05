@@ -1,0 +1,13 @@
+/*
+ * Transition.cpp
+ *
+ *  Created on: May 3, 2016
+ *      Author: mss9627
+ */
+
+#include "Signals.h"
+
+Transition::Transition(int next_state, Signal signal)
+{
+
+}

@@ -1,0 +1,30 @@
+/*
+ * Signals.h
+ *
+ *  Created on: May 3, 2016
+ *      Author: mss9627
+ */
+
+#ifndef SIGNALS_H_
+#define SIGNALS_H_
+
+enum ButtonSignals
+{
+	MODE,
+	SET,
+	START,
+	MODE_HELD,
+	MODE_RELEASED,
+	MODE_START_HELD,
+	ALL_HELD
+};
+
+enum ModeSignals
+{
+	CHANGE_TIRE_CIRC,
+	CHANGE_CALC_MODE,
+	STOP_POLLING,
+	START_POLLING,
+};
+
+#endif /* SIGNALS_H_ */

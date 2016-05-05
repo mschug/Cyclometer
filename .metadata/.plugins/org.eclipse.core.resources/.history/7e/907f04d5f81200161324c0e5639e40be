@@ -1,0 +1,47 @@
+/*
+ * State.h
+ *
+ *  Created on: May 3, 2016
+ *      Author: mss9627
+ */
+
+#ifndef STATE_H_
+#define STATE_H_
+
+enum StateEnum
+{
+	FULL_RESET       = 1,
+	RUN_CYCLOMETER   = 2,
+	SET_UNITS        = 3,
+	SET_TIRE_CIRC    = 4,
+	CYCLE_TIRE_CIRC  = 5,
+	DISPLAY_DATA     = 6,
+	DISPLAY_SPEED    = 7,
+	DISPLAY_DISTANCE = 8,
+	DISPLAY_TIME     = 9,
+	MANUAL_OFF       = 10,
+	MANUAL_ON        = 11,
+	AUTO_OFF         = 12,
+	AUTO_ON          = 13,
+	INPUT_WAITING    = 14,
+	INPUT_POLLING    = 15,
+	WATCHDOG_WAITING = 16,
+	WATCHDOG_POLLING = 17,
+
+	INVALID_STATE = -1
+};
+
+class State
+{
+private:
+	StateEnum m_state;
+public:
+	State();
+	State(StateEnum state);
+	void entryAction();
+	void exitAction();
+	void doAction();
+	~State();
+};
+
+#endif /* STATE_H_ */

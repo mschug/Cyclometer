@@ -1,0 +1,13 @@
+/*
+ * Transition.h
+ *
+ *  Created on: May 3, 2016
+ *      Author: mss9627
+ */
+
+#ifndef TRANSITION_H_
+#define TRANSITION_H_
+
+#include "Signals.h"
+
+#endif /* TRANSITION_H_ */
