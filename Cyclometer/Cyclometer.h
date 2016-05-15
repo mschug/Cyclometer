@@ -8,5 +8,8 @@
 #ifndef CYCLOMETER_H_
 #define CYCLOMETER_H_
 
+#include "InputDetection.h"
+#include "InputWatchdog.h"
+#include "GlobalTimer.h"
 
 #endif /* CYCLOMETER_H_ */
