@@ -31,4 +31,14 @@ enum Signal
 	UNKNOWN_SIGNAL   = -1
 };
 
+extern Signal signal;
+extern unsigned long long gblCounter;
+extern struct sigevent event;
+extern int chid;
+
+
+// Watchdog flag
+extern Signal watchdogFlag;
+
+
 #endif /* SIGNALS_H_ */

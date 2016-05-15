@@ -1,12 +1,12 @@
 /*
- * InputDetection.h
+ * GlobalTimer.h
  *
  *  Created on: May 5, 2016
  *      Author: ssj3000/mss9627
  */
 
-#ifndef INPUTDETECTION_H_
-#define INPUTDETECTION_H_
+#ifndef GLOBALTIMER_H_
+#define GLOBALTIMER_H_
 
 #include <pthread.h>
 #include <iostream.h>
@@ -20,26 +20,20 @@
 
 #include "Signals.h"
 
-class InputDetection
+class GlobalTimer
 {
 
 public:
 
 	// Thread ID
-	pthread_t InputDetectionThreadID;
-	struct _pulse pulse;
+	pthread_t GlobalTimerThreadID;
 
 
-	InputDetection();	// constructor
-	~InputDetection();	// destructor
+	GlobalTimer();	// constructor
+	~GlobalTimer();	// destructor
 
-
-	static void* InputDetectionThread(void* arg);	// Thread function
-
-	// Handle variables for DAIO Port A for input pulse detection
-	uintptr_t daio_ctrl_handle;
-	uintptr_t daio_portA_handle;
+	static void* GlobalTimerThread(void* arg);	// Thread function
 
 };
 
-#endif /* INPUTDETECTION_H_ */
+#endif /* GLOBALTIMER_H_ */
