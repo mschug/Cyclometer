@@ -2,7 +2,7 @@
  * Cyclometer.h
  *
  *  Created on: May 5, 2016
- *      Author: mss9627
+ *      Author: ssj3000/mss9627
  */
 
 #ifndef CYCLOMETER_H_
