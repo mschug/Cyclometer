@@ -15,8 +15,11 @@ class Transition
 {
 protected:
 	Signal m_signal;
-	int m_next_state;
+	StateEnum m_next_state;
 public:
+	Signal getSignal() { return m_signal; }
+	StateEnum getNextState() { return m_next_state; }
+
 	Transition();
 	Transition(StateEnum next_state, Signal signal);
 };

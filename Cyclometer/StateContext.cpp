@@ -102,8 +102,8 @@ void StateContext::mapTransitionsToStates()
 	reset_state[0] = 0;
 	std::vector< int > run_state(1);
 	run_state[0] = 1;
-	state_table[0] = reset_state;
-	state_table[1] = run_state;
+	state_table[FULL_RESET] = reset_state;
+	state_table[RUN_CYCLOMETER] = run_state;
 
 	// All states below include a transition to an invalid state once full reset occurs
 
@@ -116,7 +116,7 @@ void StateContext::mapTransitionsToStates()
 	set_unit_state[0] = RESET_TRANSITION;
 	set_unit_state[1] = 3;
 	set_unit_state[2] = 4;
-	state_table[2] = set_unit_state;
+	state_table[SET_UNITS] = set_unit_state;
 
 	// SET_TIRE_CIRC
 	std::vector< int > set_circ_state(4);
@@ -124,21 +124,21 @@ void StateContext::mapTransitionsToStates()
 	set_circ_state[1] = 5;
 	set_circ_state[2] = 6;
 	set_circ_state[3] = 7;
-	state_table[3] = set_circ_state;
+	state_table[SET_TIRE_CIRC] = set_circ_state;
 
 	// CYCLE_TIRE_CIRC
 	std::vector< int > cycle_circ_state(3);
 	cycle_circ_state[0] = RESET_TRANSITION;
 	cycle_circ_state[1] = 8;
 	cycle_circ_state[2] = 9;
-	state_table[4] = cycle_circ_state;
+	state_table[CYCLE_TIRE_CIRC] = cycle_circ_state;
 
 	// DISPLAY_DATA
 	std::vector< int > display_data_state(3);
 	display_data_state[0] = RESET_TRANSITION;
 	display_data_state[1] = 10;
 	display_data_state[2] = 11;
-	state_table[5] = display_data_state;
+	state_table[DISPLAY_DATA] = display_data_state;
 
 	// The following states will also exit to an invalid state if DISPLAY_DATA exits
 	const int DISPLAY_TRANSITION = 12;
@@ -149,7 +149,7 @@ void StateContext::mapTransitionsToStates()
 	display_speed_state[1] = DISPLAY_TRANSITION;
 	display_speed_state[2] = 13;
 	display_speed_state[3] = 14;
-	state_table[6] = display_speed_state;
+	state_table[DISPLAY_SPEED] = display_speed_state;
 
 	// DISPLAY_DISTANCE
 	std::vector< int > display_distance_state(4);
@@ -157,7 +157,7 @@ void StateContext::mapTransitionsToStates()
 	display_distance_state[1] = DISPLAY_TRANSITION;
 	display_distance_state[2] = 15;
 	display_distance_state[3] = 16;
-	state_table[7] = display_distance_state;
+	state_table[DISPLAY_DISTANCE] = display_distance_state;
 
 	// DISPLAY_TIME
 	std::vector< int > display_time_state(4);
@@ -165,7 +165,7 @@ void StateContext::mapTransitionsToStates()
 	display_time_state[1] = DISPLAY_TRANSITION;
 	display_time_state[2] = 17;
 	display_time_state[3] = 18;
-	state_table[8] = display_time_state;
+	state_table[DISPLAY_TIME] = display_time_state;
 
 /* --------- Input Calculation orthogonal region ---------- */
 
@@ -174,7 +174,7 @@ void StateContext::mapTransitionsToStates()
 	manual_off_state[0] = RESET_TRANSITION;
 	manual_off_state[1] = 19;
 	manual_off_state[2] = 20;
-	state_table[9] = manual_off_state;
+	state_table[MANUAL_OFF] = manual_off_state;
 
 	// MANUAL_ON
 	std::vector< int > manual_on_state(4);
@@ -182,14 +182,14 @@ void StateContext::mapTransitionsToStates()
 	manual_on_state[1] = 21;
 	manual_on_state[2] = 22;
 	manual_on_state[3] = 23;
-	state_table[10] = manual_on_state;
+	state_table[MANUAL_ON] = manual_on_state;
 
 	// AUTO_OFF
 	std::vector< int > auto_off_state(3);
 	auto_off_state[0] = RESET_TRANSITION;
 	auto_off_state[1] = 24;
 	auto_off_state[2] = 25;
-	state_table[11] = auto_off_state;
+	state_table[AUTO_OFF] = auto_off_state;
 
 	// AUTO_ON
 	std::vector< int > auto_on_state(4);
@@ -197,7 +197,7 @@ void StateContext::mapTransitionsToStates()
 	auto_on_state[1] = 26;
 	auto_on_state[2] = 27;
 	auto_on_state[3] = 28;
-	state_table[12] = auto_on_state;
+	state_table[AUTO_ON] = auto_on_state;
 
 /* --------- Input Detection orthogonal region ---------- */
 
@@ -205,14 +205,14 @@ void StateContext::mapTransitionsToStates()
 	std::vector< int > input_waiting_state(2);
 	input_waiting_state[0] = RESET_TRANSITION;
 	input_waiting_state[1] = 29;
-	state_table[13] = input_waiting_state;
+	state_table[INPUT_WAITING] = input_waiting_state;
 
 	// INPUT_POLLING
 	std::vector< int > input_polling_state(3);
 	input_polling_state[0] = RESET_TRANSITION;
 	input_polling_state[1] = 30;
 	input_polling_state[2] = 31;
-	state_table[14] = input_polling_state;
+	state_table[INPUT_POLLING] = input_polling_state;
 
 /* --------- Input Watchdog orthogonal region ---------- */
 
@@ -220,7 +220,7 @@ void StateContext::mapTransitionsToStates()
 	std::vector< int > watchdog_waiting_state(2);
 	watchdog_waiting_state[0] = RESET_TRANSITION;
 	watchdog_waiting_state[1] = 32;
-	state_table[15] = watchdog_waiting_state;
+	state_table[WATCHDOG_WAITING] = watchdog_waiting_state;
 
 	// WATCHDOG_POLLING
 	std::vector< int > watchdog_polling_state(4);
@@ -228,7 +228,7 @@ void StateContext::mapTransitionsToStates()
 	watchdog_polling_state[1] = 33;
 	watchdog_polling_state[2] = 34;
 	watchdog_polling_state[3] = 35;
-	state_table[16] = watchdog_polling_state;
+	state_table[WATCHDOG_POLLING] = watchdog_polling_state;
 }
 
 StateContext::StateContext()
@@ -236,6 +236,73 @@ StateContext::StateContext()
 	threadAlive = true;
 	createTransitions();
 	mapTransitionsToStates();
+
+	// States are invalid since orthogonal region is not in use
+	main_state = FULL_RESET;
+	display_state = INVALID_STATE;
+	display_state_internal = INVALID_STATE;
+	calculation_state = INVALID_STATE;
+	detection_state = INVALID_STATE;
+	watchdog_state = INVALID_STATE;
 }
 
-StateContext::~StateContext(){}
+void StateContext::acceptSignal(Signal s)
+{
+	// Handle top-level transitions first
+	if (main_state == FULL_RESET && s == NO_SIGNAL)
+	{
+		main_state = RUN_CYCLOMETER;
+		display_state = SET_UNITS;
+		calculation_state = MANUAL_OFF;
+		detection_state = INPUT_WAITING;
+		watchdog_state = WATCHDOG_WAITING;
+		// TODO: Enter all current states, exit FULL_RESET
+	}
+	else if(s == ALL_HELD)
+	{
+		main_state = FULL_RESET;
+		display_state = INVALID_STATE;
+		display_state_internal = INVALID_STATE;
+		calculation_state = INVALID_STATE;
+		detection_state = INVALID_STATE;
+		watchdog_state = INVALID_STATE;
+		// TODO: Exit all current states, enter FULL_RESET
+	}
+
+	// Try to run transition on each orthogonal region and within display superstate
+	std::vector<int> current_transitions = state_table[display_state];
+	performTransition(current_transitions, s, display_state);
+
+	current_transitions = state_table[display_state_internal];
+	performTransition(current_transitions, s, display_state_internal);
+
+	current_transitions = state_table[calculation_state];
+	performTransition(current_transitions, s, calculation_state);
+
+	current_transitions = state_table[detection_state];
+	performTransition(current_transitions, s, detection_state);
+
+	current_transitions = state_table[watchdog_state];
+	performTransition(current_transitions, s, watchdog_state);
+}
+
+void performTransition(std::vector<int> transitions, Signal s, StateEnum &state)
+{
+	std::vector<int>::iterator it;
+	for (it = transitions.begin(); it != transitions.end(); it++)
+	{
+		int t = *it;
+		if(transitions.at(t)->getSignal() == s)
+		{
+			states[state]->exitAction();
+			states[transitions.at(t)->getNextState()]->entryAction();
+			state = transitions.at(t)->getNextState();
+			break;
+		}
+	}
+}
+
+StateContext::~StateContext()
+{
+	threadAlive = false;
+}

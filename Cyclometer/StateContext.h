@@ -38,7 +38,10 @@ private:
 
 	void createTransitions();
 	void mapTransitionsToStates();
+	void performTransition(std::vector<int> transitions, Signal s, StateEnum &state);
+
 public:
+	void acceptSignal(Signal s);
 	StateContext();
 	~StateContext();
 };
