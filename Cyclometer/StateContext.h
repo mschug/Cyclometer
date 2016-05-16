@@ -37,6 +37,7 @@ private:
 	std::vector<Transition*> transitions;
 
 	void createTransitions();
+	void mapTransitionsToStates();
 public:
 	StateContext();
 	~StateContext();
