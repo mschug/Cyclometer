@@ -21,7 +21,7 @@ using namespace std;
 #include <string>
 
 class StateContext {
-private:
+protected:
 	// Each state represents one orthogonal region
 	StateEnum main_state;
 	StateEnum display_state;
