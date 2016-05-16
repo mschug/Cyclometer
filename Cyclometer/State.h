@@ -10,25 +10,25 @@
 
 enum StateEnum
 {
-	FULL_RESET       = 1,
-	RUN_CYCLOMETER   = 2,
-	SET_UNITS        = 3,
-	SET_TIRE_CIRC    = 4,
-	CYCLE_TIRE_CIRC  = 5,
-	DISPLAY_DATA     = 6,
-	DISPLAY_SPEED    = 7,
-	DISPLAY_DISTANCE = 8,
-	DISPLAY_TIME     = 9,
-	MANUAL_OFF       = 10,
-	MANUAL_ON        = 11,
-	AUTO_OFF         = 12,
-	AUTO_ON          = 13,
-	INPUT_WAITING    = 14,
-	INPUT_POLLING    = 15,
-	WATCHDOG_WAITING = 16,
-	WATCHDOG_POLLING = 17,
+	FULL_RESET       = 0,
+	RUN_CYCLOMETER   = 1,
+	SET_UNITS        = 2,
+	SET_TIRE_CIRC    = 3,
+	CYCLE_TIRE_CIRC  = 4,
+	DISPLAY_DATA     = 5,
+	DISPLAY_SPEED    = 6,
+	DISPLAY_DISTANCE = 7,
+	DISPLAY_TIME     = 8,
+	MANUAL_OFF       = 9,
+	MANUAL_ON        = 10,
+	AUTO_OFF         = 11,
+	AUTO_ON          = 12,
+	INPUT_WAITING    = 13,
+	INPUT_POLLING    = 14,
+	WATCHDOG_WAITING = 15,
+	WATCHDOG_POLLING = 16,
 
-	INVALID_STATE = -1
+	INVALID_STATE = 17
 };
 
 class State

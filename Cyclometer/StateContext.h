@@ -37,6 +37,7 @@ private:
 	std::vector<Transition*> transitions;
 
 	void createTransitions();
+	void createStates();
 	void mapTransitionsToStates();
 	void performTransition(std::vector<int> transitions, Signal s, StateEnum &state);
 

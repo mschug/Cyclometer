@@ -77,7 +77,7 @@ void StateContext::createTransitions()
 	transitions.push_back( new Transition(INPUT_POLLING, START_POLLING) );
 
 	// INPUT_POLLING
-	transitions.push_back( Transition(INPUT_POLLING, NO_SIGNAL) ); // Sends PULSE
+	transitions.push_back( new Transition(INPUT_POLLING, NO_SIGNAL) ); // Sends PULSE
 	transitions.push_back( new Transition(INPUT_WAITING, STOP_POLLING) );
 
 /* --------- Input Watchdog orthogonal region ---------- */
@@ -89,6 +89,37 @@ void StateContext::createTransitions()
 	transitions.push_back( new Transition(WATCHDOG_WAITING, NO_SIGNAL) ); // Sends TIMEOUT
 	transitions.push_back( new Transition(WATCHDOG_WAITING, STOP_WATCHDOG) );
 	transitions.push_back( new Transition(WATCHDOG_POLLING, STROKE) );
+}
+
+/* Initialize states and add them to state vector
+ * States are added in the order they appear in State.h
+ * States must remain in this order or performTransition will be incorrect */
+void StateContext::createStates()
+{
+	// TODO - Create separate State implementations for the following:
+	// FULL_RESET (entry action)
+	// RUN_CYCLOMETER (start inner threads)
+	// DISPLAY_DATA (start inner state)
+	// AUTO_ON (entry and exit actions)
+	// WATCHDOG_ENABLED (exit action)
+	states.push_back(new State(FULL_RESET));
+	states.push_back(new State(RUN_CYCLOMETER));
+	states.push_back(new State(SET_UNITS));
+	states.push_back(new State(SET_TIRE_CIRC));
+	states.push_back(new State(CYCLE_TIRE_CIRC));
+	states.push_back(new State(DISPLAY_DATA));
+	states.push_back(new State(DISPLAY_SPEED));
+	states.push_back(new State(DISPLAY_DISTANCE));
+	states.push_back(new State(DISPLAY_TIME));
+	states.push_back(new State(MANUAL_OFF));
+	states.push_back(new State(MANUAL_ON));
+	states.push_back(new State(AUTO_OFF));
+	states.push_back(new State(AUTO_ON));
+	states.push_back(new State(INPUT_WAITING));
+	states.push_back(new State(INPUT_POLLING));
+	states.push_back(new State(WATCHDOG_WAITING));
+	states.push_back(new State(WATCHDOG_POLLING));
+	states.push_back(new State(INVALID_STATE));
 }
 
 /* Maps states to their transitions
@@ -256,9 +287,11 @@ void StateContext::acceptSignal(Signal s)
 		calculation_state = MANUAL_OFF;
 		detection_state = INPUT_WAITING;
 		watchdog_state = WATCHDOG_WAITING;
+
 		// TODO: Enter all current states, exit FULL_RESET
+		return;
 	}
-	else if(s == ALL_HELD)
+	else if(main_state == RUN_CYCLOMETER && s == ALL_HELD)
 	{
 		main_state = FULL_RESET;
 		display_state = INVALID_STATE;
@@ -266,7 +299,9 @@ void StateContext::acceptSignal(Signal s)
 		calculation_state = INVALID_STATE;
 		detection_state = INVALID_STATE;
 		watchdog_state = INVALID_STATE;
+
 		// TODO: Exit all current states, enter FULL_RESET
+		return;
 	}
 
 	// Try to run transition on each orthogonal region and within display superstate
