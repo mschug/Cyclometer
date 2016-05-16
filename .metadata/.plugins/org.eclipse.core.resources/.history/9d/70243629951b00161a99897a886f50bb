@@ -1,0 +1,41 @@
+/*
+ * StateContext.cpp
+ *
+ *  Created on: May 3, 2016
+ *      Author: mss9627
+ */
+
+#include "StateContext.h"
+
+// Used to clean up adding transitions
+#define T(a) (t##a)
+
+StateContext::StateContext()
+{
+	threadAlive = true;
+
+	// FULL_RESET and RUN_CYCLOMETER
+	Transition* t0 = new Transition(RUN_CYCLOMETER, NO_SIGNAL);
+	Transition* t1 = new Transition(FULL_RESET, ALL_HELD);
+
+	 // Null state when orthogonal region is unused
+	Transition* t2 = new Transition(INVALID_STATE, NO_SIGNAL);
+
+	// Display Operations orthogonal region
+
+	// SET_UNITS
+	Transition* t2 = new Transition(SET_UNITS, MODE);
+	Transition* t3 = new Transition(SET_TIRE_CIRC, SET);
+
+	// SET_TIRE_CIRC
+	Transition* t4 = new Transition(SET_TIRE_CIRC, MODE);
+	Transition* t5 = new Transition(CYCLE_TIRE_CIRC, MODE_HELD);
+	Transition* t6 = new Transition(DISPLAY_DATA, SET);
+
+	// CYCLE_TIRE_CIRC
+
+	// DISPLAY_DATA and inner states
+
+}
+
+StateContext::~StateContext(){}

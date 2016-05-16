@@ -35,8 +35,6 @@ private:
 	map< int , std::vector< int > > state_table;
 	std::vector<State*> states;
 	std::vector<Transition*> transitions;
-
-	void createTransitions();
 public:
 	StateContext();
 	~StateContext();

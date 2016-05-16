@@ -1,0 +1,16 @@
+/*
+ * StateContext.cpp
+ *
+ *  Created on: May 3, 2016
+ *      Author: mss9627
+ */
+
+#include "StateContext.h"
+
+StateContext::StateContext()
+{
+	threadAlive = true;
+	Transition* t1 = new Transition(RUN_CYCLOMETER, NO_SIGNAL); // reset to start
+}
+
+StateContext::~StateContext(){}

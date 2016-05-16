@@ -1,0 +1,90 @@
+/*
+ * StateContext.cpp
+ *
+ *  Created on: May 3, 2016
+ *      Author: mss9627
+ */
+
+#include "StateContext.h"
+
+// Used to clean up adding transitions
+#define T(a) (t##a)
+
+/* Create transitions and add them to transition vector */
+void StateContext::createTransitions()
+{
+	// FULL_RESET and RUN_CYCLOMETER
+	Transition* t0 = new Transition(RUN_CYCLOMETER, NO_SIGNAL);
+	Transition* t1 = new Transition(FULL_RESET, ALL_HELD);
+
+	 // Null state when orthogonal region is unused
+	Transition* t2 = new Transition(INVALID_STATE, NO_SIGNAL);
+
+/* --------- Display Operations orthogonal region ---------- */
+
+	// SET_UNITS
+	Transition* t2 = new Transition(SET_UNITS, MODE);
+	Transition* t3 = new Transition(SET_TIRE_CIRC, SET);
+
+	// SET_TIRE_CIRC
+	Transition* t4 = new Transition(SET_TIRE_CIRC, MODE);
+	Transition* t5 = new Transition(CYCLE_TIRE_CIRC, MODE_HELD);
+	Transition* t6 = new Transition(DISPLAY_DATA, SET);
+
+	// CYCLE_TIRE_CIRC
+	Transition* t7 = new Transition(SET_TIRE_CIRC, MODE_RELEASED);
+	Transition* t8 = new Transition(DISPLAY_DATA, SET);
+
+	// DISPLAY_DATA
+	Transition* t9  = new Transition(DISPLAY_DATA, MODE_START_HELD);
+	Transition* t10 = new Transition(SET_TIRE_CIRC, CHANGE_TIRE_CIRC);
+
+	// DISPLAY_SPEED
+	Transition* t11 = new Transition(DISPLAY_SPEED, SET);
+	Transition* t12 = new Transition(DISPLAY_DISTANCE, MODE);
+
+	// DISPLAY_DISTANCE
+	Transition* t13 = new Transition(DISPLAY_DISTANCE, SET);
+	Transition* t14 = new Transition(DISPLAY_TIME, MODE);
+
+	// DISPLAY_TIME
+	Transition* t15 = new Transition(DISPLAY_TIME, SET);
+	Transition* t16 = new Transition(DISPLAY_SPEED, MODE);
+
+/* --------- Input Calculation orthogonal region ---------- */
+
+	// MANUAL_OFF
+	Transition* t17 = new Transition(MANUAL_ON, START);
+	Transition* t18 = new Transition(AUTO_ON, CHANGE_CALC_MODE);
+
+	// MANUAL_ON
+	Transition* t19 = new Transition(MANUAL_ON, PULSE);
+	Transition* t20 = new Transition(MANUAL_OFF, START);
+	Transition* t21 = new Transition(AUTO_ON, CHANGE_CALC_MODE);
+
+	// AUTO_OFF
+	Transition* t22 = new Transition(AUTO_ON, PULSE);
+	Transition* t23 = new Transition(MANUAL_OFF, CHANGE_CALC_MODE);
+
+	// AUTO_ON
+	Transition* t24 = new Transition(AUTO_ON, PULSE);
+	Transition* t25 = new Transition(AUTO_OFF, TIMEOUT);
+	Transition* t26 = new Transition(MANUAL_ON, CHANGE_CALC_MODE);
+
+/* --------- Input Detection orthogonal region ---------- */
+
+	// INPUT_WAITING
+	Transition* t27 = new Transition(INPUT_POLLING, START_POLLING);
+
+	// INPUT_POLLING
+	Transition* t28 = new Transition(INPUT_POLLING, NO_SIGNAL); // Sends PULSE
+	Transition* t29 = new Transition(INPUT_WAITING, STOP_POLLING);
+}
+
+StateContext::StateContext()
+{
+	threadAlive = true;
+	createTransitions();
+}
+
+StateContext::~StateContext(){}

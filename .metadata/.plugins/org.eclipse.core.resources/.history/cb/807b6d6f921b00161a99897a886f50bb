@@ -22,10 +22,8 @@ using namespace std;
 
 class StateContext {
 private:
-	// Each state represents one orthogonal region
 	StateEnum main_state;
 	StateEnum display_state;
-	StateEnum display_state_internal;
 	StateEnum calculation_state;
 	StateEnum detection_state;
 	StateEnum watchdog_state;
@@ -35,8 +33,6 @@ private:
 	map< int , std::vector< int > > state_table;
 	std::vector<State*> states;
 	std::vector<Transition*> transitions;
-
-	void createTransitions();
 public:
 	StateContext();
 	~StateContext();
