@@ -32,12 +32,12 @@ GlobalTimer::GlobalTimer() {
 					&threadAttr,
 					&GlobalTimer::GlobalTimerThread,
 					this);
-	pthread_join(GlobalTimerThreadID, NULL);
 }
 
 GlobalTimer::~GlobalTimer() {
 
 	// Some uninitializations
+	pthread_join(GlobalTimerThreadID, NULL);
 }
 
 void* GlobalTimer::GlobalTimerThread(void* arg)
@@ -114,7 +114,7 @@ void* GlobalTimer::GlobalTimerThread(void* arg)
 	for( ; ; )
 	{
 		gblCounter++;
-//		std::cout << "GlobalTimer::GlobalTimerThread: " << gblCounter << std::endl;
+		std::cout << "GlobalTimer::GlobalTimerThread: " << gblCounter << std::endl;
 	}
 
 	return 0;

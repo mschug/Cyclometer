@@ -33,13 +33,13 @@ InputWatchdog::InputWatchdog(){
 					&threadAttr, 
 					&InputWatchdog::InputWatchdogThread, 
 					this);
-	pthread_join(InputWatchdogThreadID, NULL);
 }
 
 
 InputWatchdog::~InputWatchdog() {
 
 	// Some uninitializations
+	pthread_join(InputWatchdogThreadID, NULL);
 }
 
 

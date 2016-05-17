@@ -41,13 +41,13 @@ InputDetection::InputDetection(){
 					&threadAttr, 
 					&InputDetection::InputDetectionThread, 
 					this);
-	pthread_join(InputDetectionThreadID, NULL);
 }
 
 
 InputDetection::~InputDetection() {
 
 	// Some uninitializations
+	pthread_join(InputDetectionThreadID, NULL);
 }
 
 
