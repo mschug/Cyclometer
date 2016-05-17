@@ -20,8 +20,11 @@ using namespace std;
 #include <vector>
 #include <string>
 
-class StateContext {
+class StateContext
+{
+
 protected:
+
 	// Each state represents one orthogonal region
 	StateEnum main_state;
 	StateEnum display_state;
@@ -42,6 +45,7 @@ protected:
 	void performTransition(std::vector<int> transitions, Signal s, StateEnum &state);
 
 public:
+
 	void acceptSignal(Signal s);
 	StateContext();
 	~StateContext();

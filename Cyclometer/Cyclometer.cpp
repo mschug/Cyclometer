@@ -41,7 +41,5 @@ int main ( int argc, char *argv[] ) {
 	GlobalTimer globalTimer;
 
 
-
-
 	return EXIT_SUCCESS;
 }
