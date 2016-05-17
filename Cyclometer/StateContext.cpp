@@ -140,7 +140,7 @@ void StateContext::mapTransitionsToStates()
 
 /* --------- Display Operations orthogonal region ---------- */
 
-	const int RESET_TRANSITON = 2;
+	const int RESET_TRANSITION = 2;
 
 	// SET_UNITS
 	std::vector< int > set_unit_state(3);
@@ -321,19 +321,19 @@ void StateContext::acceptSignal(Signal s)
 	performTransition(current_transitions, s, watchdog_state);
 }
 
-void performTransition(std::vector<int> transitions, Signal s, StateEnum &state)
+void StateContext::performTransition(std::vector<int> transitions, Signal s, StateEnum &state)
 {
 	std::vector<int>::iterator it;
 	for (it = transitions.begin(); it != transitions.end(); it++)
 	{
 		int t = *it;
-		if(transitions.at(t)->getSignal() == s)
-		{
-			states[state]->exitAction();
-			states[transitions.at(t)->getNextState()]->entryAction();
-			state = transitions.at(t)->getNextState();
-			break;
-		}
+//		if(transitions.at(t)->getSignal() == s)
+//		{
+//			states[state]->exitAction();
+//			states[transitions.at(t)->getNextState()]->entryAction();
+//			state = transitions.at(t)->getNextState();
+//			break;
+//		}
 	}
 }
 

@@ -18,3 +18,13 @@ Transition::Transition(StateEnum next_state, Signal signal)
 	m_next_state = next_state;
 	m_signal = signal;
 }
+
+Signal Transition::getSignal()
+{
+	return m_signal;
+}
+
+StateEnum Transition::getNextState()
+{
+	return m_next_state;
+}

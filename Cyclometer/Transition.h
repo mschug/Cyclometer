@@ -17,8 +17,8 @@ protected:
 	Signal m_signal;
 	StateEnum m_next_state;
 public:
-	Signal getSignal() { return m_signal; }
-	StateEnum getNextState() { return m_next_state; }
+	Signal getSignal();
+	StateEnum getNextState();
 
 	Transition();
 	Transition(StateEnum next_state, Signal signal);

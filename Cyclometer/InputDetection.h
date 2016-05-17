@@ -27,18 +27,16 @@ public:
 
 	// Thread ID
 	pthread_t InputDetectionThreadID;
-	struct _pulse pulse;
 
+	// Handle variables for DAIO Port A for input pulse detection
+	uintptr_t daio_ctrl_handle;
+	uintptr_t daio_portA_handle;
 
 	InputDetection();	// constructor
 	~InputDetection();	// destructor
 
 
 	static void* InputDetectionThread(void* arg);	// Thread function
-
-	// Handle variables for DAIO Port A for input pulse detection
-	uintptr_t daio_ctrl_handle;
-	uintptr_t daio_portA_handle;
 
 };
 

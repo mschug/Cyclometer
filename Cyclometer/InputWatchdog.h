@@ -28,7 +28,6 @@ public:
 // Attributes
 	pthread_t InputWatchdogThreadID;
 	unsigned long long watchdogTimer;  // 3 sec timer ==> 0.5ms * 6000
-	struct _pulse pulse;
 
 // Methods
 	InputWatchdog();	// constructor

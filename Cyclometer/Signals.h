@@ -32,7 +32,7 @@ enum Signal
 	UNKNOWN_SIGNAL = 18
 };
 
-extern Signal signal;
+//extern Signal signal;
 extern unsigned long long gblCounter;
 extern struct sigevent event;
 extern int chid;
@@ -40,6 +40,14 @@ extern int chid;
 
 // Watchdog flag
 extern Signal watchdogFlag;
+
+// Port length and memory mapped register addresses
+#define PORT_LENGTH                 1
+#define BASE_ADDRESS                0x280
+#define DAIO_PORTA_ADDRESS          0x08  // For voltage data
+#define DAIO_PORTB_ADDRESS          0x09  // For SyncClock
+#define DAIO_PORTC_ADDRESS          0x0A  // For parity bit
+#define DAIO_CONTROLREG_ADDRESS     0x0B
 
 
 #endif /* SIGNALS_H_ */

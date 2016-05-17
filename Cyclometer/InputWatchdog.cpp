@@ -11,6 +11,8 @@ Signal watchdogFlag = NO_SIGNAL;
 
 InputWatchdog::InputWatchdog(){
 
+	watchdogTimer = 6000;
+
 	// Some initializations
 	int privity_err;
 	
@@ -31,26 +33,22 @@ InputWatchdog::InputWatchdog(){
 					&threadAttr, 
 					&InputWatchdog::InputWatchdogThread, 
 					this);
-
+	pthread_join(InputWatchdogThreadID, NULL);
 }
 
 
 InputWatchdog::~InputWatchdog() {
 
 	// Some uninitializations
-	pthread_join(InputWatchdogThreadID, NULL);
-
 }
 
 
-void* InputWatchdog::InputWatchdogThread(void* arg){
-
-	watchdogTimer = 6000;  // 3 sec timer ==> 0.5ms * 6000
-
-	// wait for signal from GlobalTimerThread
-	MsgReceivePulse ( chid, &pulse, sizeof( pulse ), NULL );
+void* InputWatchdog::InputWatchdogThread(void* arg)
+{
+	((InputWatchdog*)arg)->watchdogTimer = 6000;  // 3 sec timer ==> 0.5ms * 6000
 
 	while( true ) {
+		std::cout << "InputWatchdog::InputWatchdogThread" << std::endl;
 		
 		while( watchdogFlag != START_WATCHDOG &&
 				watchdogFlag == STOP_WATCHDOG)
@@ -61,17 +59,18 @@ void* InputWatchdog::InputWatchdogThread(void* arg){
 		while( watchdogFlag == START_WATCHDOG && 
 				watchdogFlag != STOP_WATCHDOG )
 		{			
-			if( watchdogTimer > 0 )
+			if( ((InputWatchdog*)arg)->watchdogTimer > 0 )
 			{
-				--watchdogTimer;
+				--((InputWatchdog*)arg)->watchdogTimer;
 			}
 			else
 			{
-				watchdogTimer = 6000;
+				((InputWatchdog*)arg)->watchdogTimer = 6000;
 			}
 		}
 
 	}
+	return 0;
 }
 
 

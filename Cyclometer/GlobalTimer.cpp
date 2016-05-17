@@ -12,22 +12,44 @@ unsigned long long gblCounter = 0;
 
 GlobalTimer::GlobalTimer() {
 
+	// Some initializations
+	int privity_err;
+
+	/* Give this thread root permissions to access the hardware */
+	privity_err = ThreadCtl(_NTO_TCTL_IO, NULL);
+
+	if (privity_err == -1) {
+		std::cout <<"can't get root permissions" << std::endl;
+		return;
+	}
+
+	pthread_attr_t threadAttr;
+	pthread_attr_init(&threadAttr);		// initialize thread attributes structure
+	pthread_attr_setdetachstate(&threadAttr, PTHREAD_CREATE_JOINABLE);
+
+	// Start the thread
+	pthread_create(	&GlobalTimerThreadID,
+					&threadAttr,
+					&GlobalTimer::GlobalTimerThread,
+					this);
+	pthread_join(GlobalTimerThreadID, NULL);
 }
 
 GlobalTimer::~GlobalTimer() {
 
+	// Some uninitializations
 }
 
 void* GlobalTimer::GlobalTimerThread(void* arg)
 {
-	int pid;
+	// int pid;
 	// int chid;
-	int pulse_id = 0 ;
+	// int pulse_id = 0 ;
 	timer_t timer_id;
 	// struct sigevent event;
 	struct itimerspec timer;
 	struct _clockperiod clkper;
-	struct _pulse pulse;
+	// struct _pulse pulse;
 	// int count = 0 ;
 	struct sched_param param;
 	int ret;
@@ -65,25 +87,26 @@ void* GlobalTimer::GlobalTimerThread(void* arg)
 	// CLOCK_REALTIME available in all POSIX systems
 	if ( timer_create( CLOCK_REALTIME, &event, &timer_id ) == -1 )
 	{
-		perror ( "canÂ’t create timer" );
+		perror ( "can’t create timer" );
 		exit( EXIT_FAILURE );
 	}
 
 	// Change the timer configuration to set its period interval
 	timer.it_value.tv_sec = 0;
-	timer.it_value.tv_nsec = 500000;		// interrupt at 0.5 ms.
+	timer.it_value.tv_nsec = 1000000;		// interrupt at 1 ms.
 	timer.it_interval.tv_sec = 0;
-	timer.it_interval.tv_nsec = 500000;		// keep interrupting every 0.5 ms.
+	timer.it_interval.tv_nsec = 1000000;		// keep interrupting every 1 ms.
 
 	// Start the timer
 	if ( timer_settime( timer_id, 0, &timer, NULL ) == -1 )
 	{
-		perror("CanÂ’t start timer.\n");
+		perror("Can’t start timer.\n");
 		exit( EXIT_FAILURE );
 	}
 
 	// send a pulse
 	// MsgSendPulse ( int coid, int priority, int code, int value );
+
 
 	gblCounter = 0;
 
@@ -91,7 +114,8 @@ void* GlobalTimer::GlobalTimerThread(void* arg)
 	for( ; ; )
 	{
 		gblCounter++;
+//		std::cout << "GlobalTimer::GlobalTimerThread: " << gblCounter << std::endl;
 	}
 
-	return;
+	return 0;
 }
