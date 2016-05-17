@@ -31,7 +31,8 @@ int main ( int argc, char *argv[] ) {
 	// Create all the threads and then create the global timer thread
 	// Global timer thread signals other threads to start
 
-
+	InputDetection inputDetection = InputDetection();
+	InputWatchdog inputWatchdog = InputWatchdog();
 
 
 
