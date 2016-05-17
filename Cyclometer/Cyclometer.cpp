@@ -33,6 +33,7 @@ int main ( int argc, char *argv[] ) {
 
 	InputDetection inputDetection = InputDetection();
 	InputWatchdog inputWatchdog = InputWatchdog();
+	GlobalTimer globalTimer = GlobalTimer();
 
 
 
