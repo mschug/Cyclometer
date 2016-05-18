@@ -24,8 +24,8 @@
 
 enum DisplayMode
 {
-	KILOMETERS = 0,
-	MILES = 1
+	KILOMETERS = 1,
+	MILES = 2
 };
 
 enum SevenSegment
@@ -47,6 +47,9 @@ enum SevenSegment
 	// Decimal is used such as BLANK & DECIMAL
 	DECIMAL = 0xFE,
 
+	// Dashes are displayed during a full system reset (or error state)
+	DASH = 0xFD,
+
 	// Displays used as (in8 val | SELECT_DISPLAY) & FIRST_DISPLAY
 	SELECT_DISPLAY = 0x0F,
 	FIRST_DISPLAY = 0xF7,
@@ -64,10 +67,16 @@ protected:
 	DisplayMode m_display_mode;
 	unsigned int m_circumference;
 	StateContext* m_state_machine;
+	unsigned int m_speed;
+	unsigned int m_distance;
+	unsigned int m_time;
 
 public:
-	int getCircumference() { return m_circumference; }
+	int getCircumference()       { return m_circumference; }
 	DisplayMode getDisplayMode() { return m_display_mode; }
+	void setSpeed(unsigned int speed)       { m_speed = speed; }
+	void setDistance(unsigned int distance) { m_distance = distance; }
+	void setTime(unsigned int trip_time)    { m_time = trip_time; }
 
 	// Thread initialization
 	pthread_t DisplayOperationsThreadID;

@@ -11,6 +11,9 @@ DisplayOperations::DisplayOperations(StateContext* state_machine)
   m_display_mode = KILOMETERS;
   m_circumference = 210; // Stored in centimeters
   m_state_machine = state_machine;
+  m_speed = 0;
+  m_distance = 0;
+  m_time = 0;
 
   // Initialize thread
 	int privity_err;
@@ -75,18 +78,44 @@ static void* DisplayOperations::DisplayOperationsThread(void* arg)
 
       case DISPLAY_DATA:
         StateEnum internal_state = m_state_machine->getDisplayStateInternal();
-        switch(internal_state)
+        if(internal_state == DISPLAY_SPEED)
         {
-          case DISPLAY_SPEED:
-            break;
-          case DISPLAY_DISTANCE:
-            break;
-          case DISPLAY_TIME:
-            break;
+          numberToOutput(output, m_speed);
+
+          if ((m_speed/100000) % 10 == 1) // Current is < 10
+            output[0] &= DECIMAL;
+          if ((m_speed/10000)  % 10 == 1) // Average is < 10
+            output[2] &= DECIMAL;
+
+          output[1] &= DECIMAL;
+          sendOutput(output);
+        }
+        else if(internal_state == DISPLAY_DISTANCE)
+        {
+          numberToOutput(output, m_distance);
+          if (m_distance < 10)
+            output[2] = ZERO;
+          output[2] &= DECIMAL;
+          sendOutput(output);
+        }
+        else if(internal_state == DISPLAY_TIME)
+        {
+          numberToOutput(output, m_time);
+          for (int i = 0; i < 3; i++)
+          {
+            if (output[i] == BLANK) output[i] = ZERO;
+          }
+          output[1] &= DECIMAL;
+          sendOutput(output);
         }
         break;
+
       case INVALID_STATE:
       default:
+        output[0] = DASH;
+        output[1] = DASH;
+        output[2] = DASH;
+        output[3] = DASH;
         break;
     }
 
@@ -149,7 +178,7 @@ SevenSegment* DisplayOperations::numberToOutput(SevenSegment* output, unsigned i
 }
 
 /* Outputs the seven segment display values one at a time. */
-void sendOutput(SevenSegment* output)
+void DisplayOperations::sendOutput(SevenSegment* output)
 {
   int val = in8(daio_portB_handle) | SELECT_DISPLAY;
   out8(daio_portB_handle, val & FIRST_DISPLAY); // Set anode 3 low
