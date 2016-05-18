@@ -5,6 +5,8 @@
  *      Author: mss9627
  */
 
+#include "DisplayOperations.h"
+
 DisplayOperations::DisplayOperations(StateContext* state_machine)
 {
   threadAlive = false;
@@ -46,14 +48,18 @@ DisplayOperations::DisplayOperations(StateContext* state_machine)
           this);
 }
 
-static void* DisplayOperations::DisplayOperationsThread(void* arg)
+void* DisplayOperations::DisplayOperationsThread(void* arg)
 {
-  threadAlive = true;
-  SevenSegment output[4];
+	DisplayOperations* self = (DisplayOperations*) arg;
+  self->threadAlive = true;
+  unsigned int output[4];
+  std::cout << "DisplayOperations::DisplayOperationsThread" << endl;
 
   while(true)
   {
-    StateEnum state = m_state_machine->getDisplayState();
+    StateEnum state = self->m_state_machine->getDisplayState();
+    StateEnum internal_state = self->m_state_machine->getDisplayStateInternal();
+
     switch(state)
     {
       case SET_UNITS:
@@ -61,52 +67,51 @@ static void* DisplayOperations::DisplayOperationsThread(void* arg)
         output[0] = BLANK;
         output[1] = BLANK;
         output[2] = BLANK;
-        if (m_display_mode == KILOMETERS)
+        if (self->m_display_mode == KILOMETERS)
           output[3] = ONE;
         else
           output[3] = TWO;
 
-        sendOutput(output);
+        self->sendOutput(output);
         break;
 
       case SET_TIRE_CIRC:
       case CYCLE_TIRE_CIRC:
         // Output current circumference
-        numberToOutput(output, m_circumference);
-        sendOutput(output);
+    	  self->numberToOutput(output, self->m_circumference);
+    	  self->sendOutput(output);
         break;
 
       case DISPLAY_DATA:
-        StateEnum internal_state = m_state_machine->getDisplayStateInternal();
         if(internal_state == DISPLAY_SPEED)
         {
-          numberToOutput(output, m_speed);
+        	self->numberToOutput(output, self->m_speed);
 
-          if ((m_speed/100000) % 10 == 1) // Current is < 10
+          if ((self->m_speed/100000) % 10 == 1) // Current is < 10
             output[0] &= DECIMAL;
-          if ((m_speed/10000)  % 10 == 1) // Average is < 10
+          if ((self->m_speed/10000)  % 10 == 1) // Average is < 10
             output[2] &= DECIMAL;
 
           output[1] &= DECIMAL;
-          sendOutput(output);
+          self->sendOutput(output);
         }
         else if(internal_state == DISPLAY_DISTANCE)
         {
-          numberToOutput(output, m_distance);
-          if (m_distance < 10)
+        	self->numberToOutput(output, self->m_distance);
+          if (self->m_distance < 10)
             output[2] = ZERO;
           output[2] &= DECIMAL;
-          sendOutput(output);
+          self->sendOutput(output);
         }
         else if(internal_state == DISPLAY_TIME)
         {
-          numberToOutput(output, m_time);
+        	self->numberToOutput(output, self->m_time);
           for (int i = 0; i < 3; i++)
           {
             if (output[i] == BLANK) output[i] = ZERO;
           }
           output[1] &= DECIMAL;
-          sendOutput(output);
+          self->sendOutput(output);
         }
         break;
 
@@ -116,17 +121,19 @@ static void* DisplayOperations::DisplayOperationsThread(void* arg)
         output[1] = DASH;
         output[2] = DASH;
         output[3] = DASH;
+        self->sendOutput(output);
         break;
     }
 
-    // Pause for 1/100 of a second - prevents flickering and reduces signals sent
-    usleep(10000);
+    // Pause for 1/67 of a second - prevents flickering and reduces signals sent
   }
+
+  return 0;
 }
 
 /* Converts the last four digits of a number into a set of SevenSegment outputs.
  * Decimal places will be handled by the DisplayOperationsThread. */
-SevenSegment* DisplayOperations::numberToOutput(SevenSegment* output, unsigned int num)
+void DisplayOperations::numberToOutput(unsigned int* output, unsigned int num)
 {
   for (int i = 3; i >= 0; i--)
   {
@@ -173,28 +180,30 @@ SevenSegment* DisplayOperations::numberToOutput(SevenSegment* output, unsigned i
 
     num /= 10; // Remove last digit
   }
-
-  return output;
 }
 
 /* Outputs the seven segment display values one at a time. */
-void DisplayOperations::sendOutput(SevenSegment* output)
+void DisplayOperations::sendOutput(unsigned int* output)
 {
   int val = in8(daio_portB_handle) | SELECT_DISPLAY;
   out8(daio_portB_handle, val & FIRST_DISPLAY); // Set anode 3 low
   out8(daio_portA_handle, output[0]);
+  usleep(100);
 
   val = in8(daio_portB_handle) | SELECT_DISPLAY; // in8 duplicated to remain thread-safe
   out8(daio_portB_handle, val & SECOND_DISPLAY); // Set anode 2 low
   out8(daio_portA_handle, output[1]);
+  usleep(100);
 
   val = in8(daio_portB_handle) | SELECT_DISPLAY;
   out8(daio_portB_handle, val & THIRD_DISPLAY); // Set anode 1 low
   out8(daio_portA_handle, output[2]);
+  usleep(100);
 
   val = in8(daio_portB_handle) | SELECT_DISPLAY;
   out8(daio_portB_handle, val & FOURTH_DISPLAY); // Set anode 0 low
   out8(daio_portA_handle, output[3]);
+  usleep(100);
 }
 
 DisplayOperations::DisplayOperations(){}

@@ -31,38 +31,38 @@ enum DisplayMode
 enum SevenSegment
 {
 	// Lit segments are represented as 0 bits
-	// Output appears in the order abcdefgh
+	// Output appears in the order hgfedcba
 	BLANK = 0xFF,
-	ZERO = 0x03,
-	ONE = 0x9F,
-	TWO = 0x25,
-	THREE = 0x0D,
+	ZERO = 0xC0,
+	ONE = 0xF9,
+	TWO = 0xA4,
+	THREE = 0xB0,
 	FOUR = 0x99,
-	FIVE = 0x49,
-	SIX = 0x41,
-	SEVEN = 0x1F,
-	EIGHT = 0x01,
-	NINE = 0x09,
+	FIVE = 0x92,
+	SIX = 0x82,
+	SEVEN = 0xF8,
+	EIGHT = 0x80,
+	NINE = 0x90,
 
 	// Decimal is used such as BLANK & DECIMAL
-	DECIMAL = 0xFE,
+	DECIMAL = 0x7F,
 
 	// Dashes are displayed during a full system reset (or error state)
-	DASH = 0xFD,
+	DASH = 0xBF,
 
 	// Displays used as (in8 val | SELECT_DISPLAY) & FIRST_DISPLAY
 	SELECT_DISPLAY = 0x0F,
-	FIRST_DISPLAY = 0xF7,
-	SECOND_DISPLAY = 0xFB,
-	THIRD_DISPLAY = 0xFD,
-	FOURTH_DISPLAY = 0xFE
+	FIRST_DISPLAY = 0xFE,
+	SECOND_DISPLAY = 0xFD,
+	THIRD_DISPLAY = 0xFB,
+	FOURTH_DISPLAY = 0xF7
 };
 
 class DisplayOperations
 {
 protected:
-	SevenSegment* numberToOutput(SevenSegment* output, unsigned int num);
-	void sendOutput(SevenSegment* output);
+	void numberToOutput(unsigned int* output, unsigned int num);
+	void sendOutput(unsigned int* output);
 
 	DisplayMode m_display_mode;
 	unsigned int m_circumference;

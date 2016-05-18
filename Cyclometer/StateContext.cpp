@@ -321,19 +321,19 @@ void StateContext::acceptSignal(Signal s)
 	performTransition(current_transitions, s, watchdog_state);
 }
 
-void StateContext::performTransition(std::vector<int> transitions, Signal s, StateEnum &state)
+void StateContext::performTransition(std::vector<int> current_transitions, Signal s, StateEnum &state)
 {
 	std::vector<int>::iterator it;
-	for (it = transitions.begin(); it != transitions.end(); it++)
+	for (it = current_transitions.begin(); it != current_transitions.end(); it++)
 	{
 		int t = *it;
-//		if(transitions.at(t)->getSignal() == s)
-//		{
-//			states[state]->exitAction();
-//			states[transitions.at(t)->getNextState()]->entryAction();
-//			state = transitions.at(t)->getNextState();
-//			break;
-//		}
+		if (transitions.at(t)->getSignal() == s)
+		{
+			states[state]->exitAction();
+			states[transitions.at(t)->getNextState()]->entryAction();
+			state = transitions.at(t)->getNextState();
+			break;
+		}
 	}
 }
 

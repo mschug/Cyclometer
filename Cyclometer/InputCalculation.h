@@ -15,6 +15,7 @@ class InputCalculation
 {
 protected:
 	unsigned long long m_last_pulse_time, m_current_pulse_time;
+	unsigned long long m_total_cycles;
 	unsigned int m_trip_time;
 
 	// Stored in kilometers to make calculation easier.
