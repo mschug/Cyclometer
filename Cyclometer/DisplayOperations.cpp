@@ -46,6 +46,7 @@ DisplayOperations::DisplayOperations(StateContext* state_machine)
 static void* DisplayOperations::DisplayOperationsThread(void* arg)
 {
   threadAlive = true;
+  SevenSegment output[4];
 
   while(true)
   {
@@ -53,35 +54,25 @@ static void* DisplayOperations::DisplayOperationsThread(void* arg)
     switch(state)
     {
       case SET_UNITS:
-        // Output three blank displays
-        SevenSegment output = BLANK;
-        int val = in8(daio_portB_handle) | SELECT_DISPLAY;
-        out8(daio_portB_handle, val & FIRST_DISPLAY); // Set anode 3 low
-        out8(daio_portA_handle, output);
-
-        val = in8(daio_portB_handle) | SELECT_DISPLAY; // in8 duplicated to remain thread-safe
-        out8(daio_portB_handle, val & SECOND_DISPLAY); // Set anode 2 low
-        out8(daio_portA_handle, output);
-
-        val = in8(daio_portB_handle) | SELECT_DISPLAY;
-        out8(daio_portB_handle, val & THIRD_DISPLAY); // Set anode 1 low
-        out8(daio_portA_handle, output);
-
-        val = in8(daio_portB_handle) | SELECT_DISPLAY;
-        out8(daio_portB_handle, val & FOURTH_DISPLAY); // Set anode 0 low
-
+        // Output three blank displays with 1 for km, 2 for miles
+        output[0] = BLANK;
+        output[1] = BLANK;
+        output[2] = BLANK;
         if (m_display_mode == KILOMETERS)
-          output = ONE;
+          output[3] = ONE;
         else
-          output = TWO;
+          output[3] = TWO;
 
-        out8(daio_portA_handle, output);
+        sendOutput(output);
         break;
 
       case SET_TIRE_CIRC:
-        break;
       case CYCLE_TIRE_CIRC:
+        // Output current circumference
+        numberToOutput(output, m_circumference);
+        sendOutput(output);
         break;
+
       case DISPLAY_DATA:
         StateEnum internal_state = m_state_machine->getDisplayStateInternal();
         switch(internal_state)
@@ -99,8 +90,82 @@ static void* DisplayOperations::DisplayOperationsThread(void* arg)
         break;
     }
 
+    // Pause for 1/100 of a second - prevents flickering and reduces signals sent
     usleep(10000);
   }
+}
+
+/* Converts the last four digits of a number into a set of SevenSegment outputs.
+ * Decimal places will be handled by the DisplayOperationsThread. */
+SevenSegment* DisplayOperations::numberToOutput(SevenSegment* output, unsigned int num)
+{
+  for (int i = 3; i >= 0; i--)
+  {
+    if (num == 0)
+    {
+      output[i] = ((i == 3) ? ZERO : BLANK);
+    }
+
+    // Store last digit in rightmost array position
+    int last_digit = num % 10;
+    switch(last_digit)
+    {
+      case 0:
+        output[i] = ZERO;
+        break;
+      case 1:
+        output[i] = ONE;
+        break;
+      case 2:
+        output[i] = TWO;
+        break;
+      case 3:
+        output[i] = THREE;
+        break;
+      case 4:
+        output[i] = FOUR;
+        break;
+      case 5:
+        output[i] = FIVE;
+        break;
+      case 6:
+        output[i] = SIX;
+        break;
+      case 7:
+        output[i] = SEVEN;
+        break;
+      case 8:
+        output[i] = EIGHT;
+        break;
+      case 9:
+        output[i] = NINE;
+        break;
+    }
+
+    num /= 10; // Remove last digit
+  }
+
+  return output;
+}
+
+/* Outputs the seven segment display values one at a time. */
+void sendOutput(SevenSegment* output)
+{
+  int val = in8(daio_portB_handle) | SELECT_DISPLAY;
+  out8(daio_portB_handle, val & FIRST_DISPLAY); // Set anode 3 low
+  out8(daio_portA_handle, output[0]);
+
+  val = in8(daio_portB_handle) | SELECT_DISPLAY; // in8 duplicated to remain thread-safe
+  out8(daio_portB_handle, val & SECOND_DISPLAY); // Set anode 2 low
+  out8(daio_portA_handle, output[1]);
+
+  val = in8(daio_portB_handle) | SELECT_DISPLAY;
+  out8(daio_portB_handle, val & THIRD_DISPLAY); // Set anode 1 low
+  out8(daio_portA_handle, output[2]);
+
+  val = in8(daio_portB_handle) | SELECT_DISPLAY;
+  out8(daio_portB_handle, val & FOURTH_DISPLAY); // Set anode 0 low
+  out8(daio_portA_handle, output[3]);
 }
 
 DisplayOperations::DisplayOperations(){}

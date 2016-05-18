@@ -58,9 +58,13 @@ enum SevenSegment
 class DisplayOperations
 {
 protected:
+	SevenSegment* numberToOutput(SevenSegment* output, unsigned int num);
+	void sendOutput(SevenSegment* output);
+
 	DisplayMode m_display_mode;
-	int m_circumference;
+	unsigned int m_circumference;
 	StateContext* m_state_machine;
+
 public:
 	int getCircumference() { return m_circumference; }
 	DisplayMode getDisplayMode() { return m_display_mode; }
