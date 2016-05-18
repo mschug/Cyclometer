@@ -72,6 +72,9 @@ void* InputDetection::InputDetectionThread(void* arg)
 			// Reset watchdog
 			watchdogFlag = START_WATCHDOG;
 			// std::cout << "InputDetection::InputDetectionThread : START_WATCHDOG" << std::endl;
+
+			// TODO: Turn the LEDs ON
+
 		}
 
 		while( ( in8(((InputDetection*)arg)->daio_portA_handle) && 0x01) == 0)
@@ -79,6 +82,9 @@ void* InputDetection::InputDetectionThread(void* arg)
 			// Stop resetting watchdog
 			watchdogFlag = STOP_WATCHDOG;
 			// std::cout << "InputDetection::InputDetectionThread : STOP_WATCHDOG" << std::endl;
+
+			// TODO: Turn the LEDs OFF
+
 		}
 
 	}

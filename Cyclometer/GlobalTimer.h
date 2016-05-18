@@ -18,6 +18,10 @@
 #include <sys/mman.h>		// for mmap_device_io()
 #include <inttypes.h>		// for ClockCycles() return value
 #include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/netmgr.h>
+#include <sys/syspage.h>
 
 #include "Signals.h"
 
@@ -33,6 +37,7 @@ public:
 	GlobalTimer();	// constructor
 	~GlobalTimer();	// destructor
 
+	void resetGlobalTimer();
 	static void* GlobalTimerThread(void* arg);	// Thread function
 
 };

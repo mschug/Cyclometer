@@ -34,52 +34,60 @@ GlobalTimer::GlobalTimer() {
 					this);
 }
 
-GlobalTimer::~GlobalTimer() {
-
+GlobalTimer::~GlobalTimer()
+{
 	// Some uninitializations
 	pthread_join(GlobalTimerThreadID, NULL);
 }
 
+
+void resetGlobalTimer()
+{
+	gblCounter = 0;
+}
+
+
 void* GlobalTimer::GlobalTimerThread(void* arg)
 {
-	// int pid;
-	// int chid;
-	// int pulse_id = 0 ;
+	int pid;
+	int chid;
+	int pulse_id = 0 ;
 	timer_t timer_id;
-	// struct sigevent event;
+	struct sigevent event;
 	struct itimerspec timer;
 	struct _clockperiod clkper;
-	// struct _pulse pulse;
-	// int count = 0 ;
-	struct sched_param param;
-	int ret;
+	struct _pulse pulse;
+//	int count = 0 ;
+//	struct sched_param param;
+//	int ret;
 
-	// Set our priority to the maximum,
-	// so we wonÂ’t get disrupted by anything other than interrupts
-	param.sched_priority = sched_get_priority_max( SCHED_RR );
-	ret = sched_setscheduler( 0, SCHED_RR, &param);
-	assert ( ret != -1 );	// if returns a -1 for failure we stop with error
+	// Set our priority to the maximum, 
+	// so we won’t get disrupted by anything other than interrupts
+//	param.sched_priority = sched_get_priority_max( SCHED_RR );
+//	ret = sched_setscheduler( 0, SCHED_RR, &param);
+//	assert ( ret != -1 );	// if returns a -1 for failure we stop with error
 
 	// Setup clock
 	clkper.nsec = 500000;
 	clkper.fract = 0;
 	ClockPeriod ( CLOCK_REALTIME, &clkper, NULL, 0 ); // 1ms
 
+	// TODO: to be removed in the end
 // ----------------------------------------------------
 // The channel ID and Event struct is created in main.c
 // and are used by all threads for communication
 // ----------------------------------------------------
-	// // Create a channel to receive timer events on
-	// chid = ChannelCreate( 0 );
-	// assert ( chid != -1 );			// if returns a -1 for failure we stop with error
+	// Create a channel to receive timer events on
+	chid = ChannelCreate( 0 );
+	assert ( chid != -1 );			// if returns a -1 for failure we stop with error
 
-	// // Set up the timer and timer event
-	// event.sigev_notify = SIGEV_PULSE;
-	// event.sigev_coid = ConnectAttach ( ND_LOCAL_NODE, 0, chid, 0, 0 );
-	// assert ( event.sigev_coid != -1 );		// stop with error if cannot attach to channel
-	// event.sigev_priority = getprio(0);
-	// event.sigev_code = 1023;				// arbitrary number assigned to this pulse
-	// event.sigev_value.sival_ptr = (void*)pulse_id;
+	// Set up the timer and timer event
+	event.sigev_notify = SIGEV_PULSE;
+	event.sigev_coid = ConnectAttach ( ND_LOCAL_NODE, 0, chid, 0, 0 );
+	assert ( event.sigev_coid != -1 );		// stop with error if cannot attach to channel
+	event.sigev_priority = getprio(0);
+	event.sigev_code = 1023;				// arbitrary number assigned to this pulse
+	event.sigev_value.sival_ptr = (void*)pulse_id;
 // ----------------------------------------------------
 
 
@@ -87,7 +95,7 @@ void* GlobalTimer::GlobalTimerThread(void* arg)
 	// CLOCK_REALTIME available in all POSIX systems
 	if ( timer_create( CLOCK_REALTIME, &event, &timer_id ) == -1 )
 	{
-		perror ( "canï¿½t create timer" );
+		perror ( "can’t create timer" );
 		exit( EXIT_FAILURE );
 	}
 
@@ -100,21 +108,19 @@ void* GlobalTimer::GlobalTimerThread(void* arg)
 	// Start the timer
 	if ( timer_settime( timer_id, 0, &timer, NULL ) == -1 )
 	{
-		perror("Can\'t start timer.\n");
+		perror("Can’t start timer.\n");
 		exit( EXIT_FAILURE );
 	}
 
-	// send a pulse
-	// MsgSendPulse ( int coid, int priority, int code, int value );
-
-
+	// Global Timer counter
 	gblCounter = 0;
 
 	// start the global counter
 	for( ; ; )
 	{
+		MsgReceivePulse ( chid, &pulse, sizeof( pulse ), NULL );
 		gblCounter++;
-		std::cout << "GlobalTimer::GlobalTimerThread: " << gblCounter << std::endl;
+		//std::cout << "GlobalTimer::GlobalTimerThread: " << gblCounter << std::endl;
 	}
 
 	return 0;

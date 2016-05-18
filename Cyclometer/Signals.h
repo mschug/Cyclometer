@@ -40,20 +40,24 @@ extern Signal curr_signal;
 // For global timer
 extern unsigned long long gblCounter;
 
-// TODO: to be removed in the end
-extern struct sigevent event;
-extern int chid;
-
 // Watchdog flag
 extern Signal watchdogFlag;
 
 // Port length and memory mapped register addresses
 #define PORT_LENGTH                 1
 #define BASE_ADDRESS                0x280
-#define DAIO_PORTA_ADDRESS          0x08  // For voltage data
-#define DAIO_PORTB_ADDRESS          0x09  // For SyncClock
-#define DAIO_PORTC_ADDRESS          0x0A  // For parity bit
+#define DAIO_PORTA_ADDRESS          0x08
+#define DAIO_PORTB_ADDRESS          0x09
+#define DAIO_PORTC_ADDRESS          0x0A
 #define DAIO_CONTROLREG_ADDRESS     0x0B
+
+
+// Timing Macros
+#define TIMERTICK_NS 1000000		// 1 msec
+#define WATCHDOG_TIMEOUT 3000		// 3000 msec
+#define PBPRESS_TIMEOUT 2000	 	// 2000 msec
+#define PBSIMULPRESS_TIMEOUT 200 	// 200 msec
+
 
 
 #endif /* SIGNALS_H_ */

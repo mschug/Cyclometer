@@ -66,37 +66,61 @@ void* PushButtonDetection::PushButtonDetectionThread(void* arg)
 	// -----------------------------------------------------------------------
 	// Pushbuttons events:
 	// -----------------------------------------------------------------------
-	// 1. MODE + SET + START/STOP : Pressed for >= 2 seconds --> FULL RESET
+	// 1. ALL HELD                : Pressed for >= 2 seconds --> FULL RESET
 	// 2. MODE                    : Toggle between km and miles
-	// 3. SET                     : Stores mode and circumference values
-	// 4. START/STOP              : Starting and Stopping cyclometer
+	// 3. MODE HELD               : Increment the circumference
+	// 4. SET                     : Stores mode and circumference values
+	// 5. START/STOP              : Starting and Stopping cyclometer
+	// 6. MODE+START/STOP         : reset the trip values
 	// -----------------------------------------------------------------------
 
 	//Signal signal = NO_SIGNAL;
+	int pbVal_last(0), pbVal_curr(0);
+	int startTime(0);
 
 	while(true)
 	{
 		std::cout << "PushButtonDetection::PushButtonDetectionThread" << std::endl;
 		
-
 		// Read DAIO A2, A3 and A4 pins only
-		//  A2 - MODE
-		//  A3 - SET
-		//  A4 - START/STOP
-		int pbVal_last = in8(self->daio_portA_handle) 
-						& 0b00111000;
+		//  DAIO A2 - MODE
+		//  DAIO A3 - SET
+		//  DAIO A4 - START/STOP
+		pbVal_last = in8(self->daio_portA_handle) & 0b00111000;
 
-		int startTime = gblCounter;
+		// Know the initial time for further calculations
+		startTime = gblCounter;
+		// std::cerr << "PushButtonDetection::PushButtonDetectionThread: startTime:  " << startTime << std::endl;
 
-		switch(pb_val)
+		// Poll for 200msec wait for detecting simultaneous button events
+		while((gblCounter - startTime) <= PBSIMULPRESS_TIMEOUT)
 		{
+			//std::cout << "PushButtonDetection::PushButtonDetectionThread: gblCounter:  " << gblCounter << std::endl;
+			pbVal_curr = in8(self->daio_portA_handle) & 0b00111000;
+		}
+
+		// std::cerr << "PushButtonDetection::PushButtonDetectionThread: 200msec done!" << std::endl;
+
+		if(pbVal_last != pbVal_curr)
+		{
+			pbVal_last = pbVal_curr;
+		}
+
+
+		switch( pbVal_last )
+		{
+			case 0b00000000: // None pressed or all released
+				curr_signal = NO_SIGNAL;
+				break;
+
 			case 0b00111000: // 1. MODE+SET+START/STOP : >=2 secs : FULL RESET
 				
 				// start timer for 2 secs and check if the values toggle 
 				// from 1 to 0 after 2 secs
-				while((gblCounter-startTime) <= 2000)
+				while((gblCounter-startTime) <= PBPRESS_TIMEOUT)
 				{
-					int pbVal_curr = in8(self->daio_portA_handle) & 0b00111000;
+					pbVal_curr = in8(self->daio_portA_handle) & 0b00111000;
+
 					if(pbVal_last != pbVal_curr)
 					{
 						curr_signal = NO_SIGNAL;
@@ -111,11 +135,12 @@ void* PushButtonDetection::PushButtonDetectionThread(void* arg)
 				break;
 
 
-			case 0b00100000: // 2. MODE : Toggle between km and miles
-				
-				while((gblCounter-startTime) <= 2000)
+			case 0b00100000:
+				// 2. MODE : Toggle between km and miles
+				// 3. MODE HELD : Increment the circumference
+				while((gblCounter-startTime) <= PBPRESS_TIMEOUT)
 				{
-					int pbVal_curr = in8(self->daio_portA_handle) & 0b00100000;
+					pbVal_curr = in8(self->daio_portA_handle) & 0b00111000;
 					if(pbVal_last != pbVal_curr)
 					{
 						curr_signal = MODE;
@@ -130,15 +155,15 @@ void* PushButtonDetection::PushButtonDetectionThread(void* arg)
 				break;
 
 
-			case 0b00010000: // 3. SET : Stores mode and circumference values
-				
+			case 0b00010000:
+				// 4. SET : Stores mode and circumference values
 				curr_signal = SET;
 				
 				break;
 
 
-			case 0b00001000: // 4. START/STOP: Starting and Stopping cyclometer
-				
+			case 0b00001000:
+				// 5. START/STOP : Starting and Stopping cyclometer
 				if(self->lastStartStop == STOP)
 				{
 					curr_signal = START;
@@ -149,7 +174,27 @@ void* PushButtonDetection::PushButtonDetectionThread(void* arg)
 				}
 				
 				break;
+
+
+			case 0b00101000:
+				// 6. MODE+START/STOP : for 2 seconds -->reset the trip values
+				while((gblCounter-startTime) <= PBPRESS_TIMEOUT)
+				{
+					pbVal_curr = in8(self->daio_portA_handle) & 0b00111000;
+					if(pbVal_last != pbVal_curr)
+					{
+						curr_signal = NO_SIGNAL;
+						break;
+					}
+					else if(pbVal_last == pbVal_curr)
+					{
+						curr_signal = MODE_START_HELD;
+					}
+				}
+
+				break;
 		}
+		std::cout << "PushButtonDetection::PushButtonDetectionThread: curr_signal: " << curr_signal << std::endl;
 
 	}
 	return 0;

@@ -9,6 +9,7 @@
 #define CYCLOMETER_H_
 
 #include "InputDetection.h"
+#include "PushButtonDetection.h"
 #include "InputWatchdog.h"
 #include "GlobalTimer.h"
 

@@ -11,7 +11,7 @@ Signal watchdogFlag = NO_SIGNAL;
 
 InputWatchdog::InputWatchdog(){
 
-	watchdogTimer = 6000;
+	watchdogTimer = 3000;
 
 	// Some initializations
 	int privity_err;
@@ -45,7 +45,7 @@ InputWatchdog::~InputWatchdog() {
 
 void* InputWatchdog::InputWatchdogThread(void* arg)
 {
-	((InputWatchdog*)arg)->watchdogTimer = 6000;  // 3 sec timer ==> 0.5ms * 6000
+	((InputWatchdog*)arg)->watchdogTimer = 3000;  // 3 sec timer ==> 0.5ms * 6000
 
 	while( true ) {
 		std::cout << "InputWatchdog::InputWatchdogThread" << std::endl;
@@ -65,7 +65,7 @@ void* InputWatchdog::InputWatchdogThread(void* arg)
 			}
 			else
 			{
-				((InputWatchdog*)arg)->watchdogTimer = 6000;
+				((InputWatchdog*)arg)->watchdogTimer = 3000;
 			}
 		}
 
