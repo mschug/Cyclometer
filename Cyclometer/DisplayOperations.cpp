@@ -53,7 +53,31 @@ static void* DisplayOperations::DisplayOperationsThread(void* arg)
     switch(state)
     {
       case SET_UNITS:
+        // Output three blank displays
+        SevenSegment output = BLANK;
+        int val = in8(daio_portB_handle) | SELECT_DISPLAY;
+        out8(daio_portB_handle, val & FIRST_DISPLAY); // Set anode 3 low
+        out8(daio_portA_handle, output);
+
+        val = in8(daio_portB_handle) | SELECT_DISPLAY; // in8 duplicated to remain thread-safe
+        out8(daio_portB_handle, val & SECOND_DISPLAY); // Set anode 2 low
+        out8(daio_portA_handle, output);
+
+        val = in8(daio_portB_handle) | SELECT_DISPLAY;
+        out8(daio_portB_handle, val & THIRD_DISPLAY); // Set anode 1 low
+        out8(daio_portA_handle, output);
+
+        val = in8(daio_portB_handle) | SELECT_DISPLAY;
+        out8(daio_portB_handle, val & FOURTH_DISPLAY); // Set anode 0 low
+
+        if (m_display_mode == KILOMETERS)
+          output = ONE;
+        else
+          output = TWO;
+
+        out8(daio_portA_handle, output);
         break;
+
       case SET_TIRE_CIRC:
         break;
       case CYCLE_TIRE_CIRC:
@@ -75,7 +99,7 @@ static void* DisplayOperations::DisplayOperationsThread(void* arg)
         break;
     }
 
-    usleep(1000);
+    usleep(10000);
   }
 }
 

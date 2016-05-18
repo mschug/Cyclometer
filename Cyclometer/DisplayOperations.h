@@ -28,6 +28,33 @@ enum DisplayMode
 	MILES = 1
 };
 
+enum SevenSegment
+{
+	// Lit segments are represented as 0 bits
+	// Output appears in the order abcdefgh
+	BLANK = 0xFF,
+	ZERO = 0x03,
+	ONE = 0x9F,
+	TWO = 0x25,
+	THREE = 0x0D,
+	FOUR = 0x99,
+	FIVE = 0x49,
+	SIX = 0x41,
+	SEVEN = 0x1F,
+	EIGHT = 0x01,
+	NINE = 0x09,
+
+	// Decimal is used such as BLANK & DECIMAL
+	DECIMAL = 0xFE,
+
+	// Displays used as (in8 val | SELECT_DISPLAY) & FIRST_DISPLAY
+	SELECT_DISPLAY = 0x0F,
+	FIRST_DISPLAY = 0xF7,
+	SECOND_DISPLAY = 0xFB,
+	THIRD_DISPLAY = 0xFD,
+	FOURTH_DISPLAY = 0xFE
+};
+
 class DisplayOperations
 {
 protected:
