@@ -23,14 +23,13 @@ InputDetection::InputDetection(){
 
 	// Get a handle to the DAIO port's registers
 	daio_ctrl_handle    = mmap_device_io(PORT_LENGTH, BASE_ADDRESS + DAIO_CONTROLREG_ADDRESS);
-	daio_portA_handle   = mmap_device_io(PORT_LENGTH, BASE_ADDRESS + DAIO_PORTA_ADDRESS);
+	daio_portC_handle   = mmap_device_io(PORT_LENGTH, BASE_ADDRESS + DAIO_PORTC_ADDRESS);
 
-	// Configure DAIO Port A as Input Port by default
+	// Configure DAIO Port C as Input Port by default
 	// -- output port - 0
 	// -- input port - 1
-	// daio_ctrl_handle = mmap_device_io(PORT_LENGTH, BASE_ADDRESS + DAIO_CONTROLREG_ADDRESS);
 	int val = in8(daio_ctrl_handle);
-	out8(daio_ctrl_handle, 0x80 | val);
+	out8(daio_ctrl_handle, 0x01 | val); // DIRCL
 
 	pthread_attr_t threadAttr;
 	pthread_attr_init(&threadAttr);		// initialize thread attributes structure
@@ -67,7 +66,7 @@ void* InputDetection::InputDetectionThread(void* arg)
 	{
 		std::cout << "InputDetection::InputDetectionThread" << std::endl;
 		// check only the PIN connected to pulse generator
-		while( ( in8(((InputDetection*)arg)->daio_portA_handle) && 0x01) == 1)
+		while( ( in8(((InputDetection*)arg)->daio_portC_handle) && 0x08) == 1)
 		{
 			// Reset watchdog
 			watchdogFlag = START_WATCHDOG;
@@ -77,7 +76,7 @@ void* InputDetection::InputDetectionThread(void* arg)
 
 		}
 
-		while( ( in8(((InputDetection*)arg)->daio_portA_handle) && 0x01) == 0)
+		while( ( in8(((InputDetection*)arg)->daio_portC_handle) && 0x08) == 0)
 		{
 			// Stop resetting watchdog
 			watchdogFlag = STOP_WATCHDOG;

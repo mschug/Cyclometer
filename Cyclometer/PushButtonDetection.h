@@ -18,6 +18,7 @@
 #include <sys/mman.h>		// for mmap_device_io()
 #include <inttypes.h>		// for ClockCycles() return value
 
+#include <string>
 #include "Signals.h"
 
 class PushButtonDetection
@@ -30,9 +31,9 @@ public:
 
 	Signal lastStartStop;
 
-	// Handle variables for DAIO Port A for input pulse detection
+	// Handle variables for DAIO Port C for input pulse detection
 	uintptr_t daio_ctrl_handle;
-	uintptr_t daio_portA_handle;
+	uintptr_t daio_portC_handle;
 
 	PushButtonDetection();	// constructor
 	~PushButtonDetection();	// destructor

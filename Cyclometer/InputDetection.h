@@ -28,9 +28,9 @@ public:
 	// Thread ID
 	pthread_t InputDetectionThreadID;
 
-	// Handle variables for DAIO Port A for input pulse detection
+	// Handle variables for DAIO Port C for input pulse detection
 	uintptr_t daio_ctrl_handle;
-	uintptr_t daio_portA_handle;
+	uintptr_t daio_portC_handle;
 
 	InputDetection();	// constructor
 	~InputDetection();	// destructor
