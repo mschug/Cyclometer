@@ -45,6 +45,13 @@ protected:
 	void performTransition(std::vector<int> transitions, Signal s, StateEnum &state);
 
 public:
+	// Threads can access current states but cannot directly modify them
+	StateEnum getMainState() {return main_state;}
+	StateEnum getDisplayState() {return display_state;}
+	StateEnum getDisplayStateInternal() {return display_state_internal;}
+	StateEnum getCalculationState() {return calculation_state;}
+	StateEnum getDetectionState() {return detection_state;}
+	StateEnum getWatchdogState() {return watchdog_state;}
 
 	void acceptSignal(Signal s);
 	StateContext();

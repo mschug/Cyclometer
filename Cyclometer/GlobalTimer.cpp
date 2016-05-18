@@ -54,7 +54,7 @@ void* GlobalTimer::GlobalTimerThread(void* arg)
 	struct sched_param param;
 	int ret;
 
-	// Set our priority to the maximum, 
+	// Set our priority to the maximum,
 	// so we wonÂ’t get disrupted by anything other than interrupts
 	param.sched_priority = sched_get_priority_max( SCHED_RR );
 	ret = sched_setscheduler( 0, SCHED_RR, &param);
@@ -87,7 +87,7 @@ void* GlobalTimer::GlobalTimerThread(void* arg)
 	// CLOCK_REALTIME available in all POSIX systems
 	if ( timer_create( CLOCK_REALTIME, &event, &timer_id ) == -1 )
 	{
-		perror ( "can’t create timer" );
+		perror ( "canï¿½t create timer" );
 		exit( EXIT_FAILURE );
 	}
 
@@ -100,7 +100,7 @@ void* GlobalTimer::GlobalTimerThread(void* arg)
 	// Start the timer
 	if ( timer_settime( timer_id, 0, &timer, NULL ) == -1 )
 	{
-		perror("Can’t start timer.\n");
+		perror("Can\'t start timer.\n");
 		exit( EXIT_FAILURE );
 	}
 

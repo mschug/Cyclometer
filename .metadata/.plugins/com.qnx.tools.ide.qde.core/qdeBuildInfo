@@ -1,29 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QdeProjectsBuildInfo>
-<qdeBuildInfo IMemento.internal.id="D:/Cyclometer/Cyclometer" buildConfig="_x86_g" projectName="Cyclometer">
-<srcDirs>
-<element>D:/Cyclometer/Cyclometer/x86/o</element>
-<element>D:/Cyclometer/Cyclometer/x86/o-g</element>
-<element>D:/Cyclometer/Cyclometer/x86</element>
-<element>D:/Cyclometer/Cyclometer</element>
-</srcDirs>
-<libDirs>
-<element>D:/Cyclometer/Cyclometer/x86/o-g</element>
-<element>C:/QNX650/target/qnx6/x86/lib</element>
-<element>C:/QNX650/target/qnx6/x86/usr/lib</element>
-</libDirs>
+<qdeBuildInfo IMemento.internal.id="D:/Actual Cyclometer Folder/Cyclometer/Cyclometer" buildConfig="_x86_g" projectName="Cyclometer">
+<srcDirs/>
+<libDirs/>
 <incDirs>
 <element>C:/QNX650/target/qnx6/usr/include</element>
 <element>C:/QNX650/target/qnx6/usr/include/cpp/c</element>
 <element>C:/QNX650/target/qnx6/usr/include/cpp</element>
-<element>D:/Cyclometer/Cyclometer/x86/o-g</element>
-<element>D:/Cyclometer/Cyclometer/x86/o</element>
-<element>D:/Cyclometer/Cyclometer/x86</element>
-<element>D:/Cyclometer/Cyclometer</element>
 </incDirs>
 <libs/>
-<SRCS>
-<element>D:/Cyclometer/Cyclometer/Cyclometer.cc</element>
-</SRCS>
+<SRCS/>
 </qdeBuildInfo>
 </QdeProjectsBuildInfo>
