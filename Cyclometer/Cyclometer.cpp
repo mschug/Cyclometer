@@ -40,8 +40,10 @@ int main ( int argc, char *argv[] )
 	// Global timer thread signals other threads to start
 
 	InputDetection inputDetection;
+	PushButtonDetection pushbuttonDetection;
 	InputWatchdog inputWatchdog;
 	GlobalTimer globalTimer;
+
 
 
 	return EXIT_SUCCESS;
