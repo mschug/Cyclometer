@@ -55,30 +55,100 @@ void* PushButtonDetection::PushButtonDetectionThread(void* arg)
 {
     // Give this thread root permissions to access the hardware
     int privity_err = ThreadCtl(_NTO_TCTL_IO, NULL);
-    if (privity_err == -1) {
+    if (privity_err == -1)
+    {
         std::cout <<"can't get root permissions" << std::endl;
         return NULL;
     }
 
-	//bool inputPulseDetected = false;
-	watchdogFlag = UNKNOWN_SIGNAL;
+	PushButtonDetection* self = (PushButtonDetection*)arg;
+
+	// -----------------------------------------------------------------------
+	// Pushbuttons events:
+	// -----------------------------------------------------------------------
+	// 1. MODE + SET + START/STOP : Pressed for >= 2 seconds --> FULL RESET
+	// 2. MODE                    : Toggle between km and miles
+	// 3. SET                     : Stores mode and circumference values
+	// 4. START/STOP              : Starting and Stopping cyclometer
+	// -----------------------------------------------------------------------
+
+	//Signal signal = NO_SIGNAL;
 
 	while(true)
 	{
-		std::cout << "InputDetection::InputDetectionThread" << std::endl;
-		// check only the PIN connected to pulse generator
-		while( ( in8(((PushButtonDetection*)arg)->daio_portA_handle) && 0x01) == 1)
-		{
-			// Reset watchdog
-			watchdogFlag = START_WATCHDOG;
-			// std::cout << "InputDetection::InputDetectionThread : START_WATCHDOG" << std::endl;
-		}
+		std::cout << "PushButtonDetection::PushButtonDetectionThread" << std::endl;
+		
 
-		while( ( in8(((PushButtonDetection*)arg)->daio_portA_handle) && 0x01) == 0)
+		// Read DAIO A2, A3 and A4 pins only
+		//  A2 - MODE
+		//  A3 - SET
+		//  A4 - START/STOP
+		int pbVal_last = in8(self->daio_portA_handle) 
+						& 0b00111000;
+
+		int startTime = gblCounter;
+
+		switch(pb_val)
 		{
-			// Stop resetting watchdog
-			watchdogFlag = STOP_WATCHDOG;
-			// std::cout << "InputDetection::InputDetectionThread : STOP_WATCHDOG" << std::endl;
+			case 0b00111000: // 1. MODE+SET+START/STOP : >=2 secs : FULL RESET
+				
+				// start timer for 2 secs and check if the values toggle 
+				// from 1 to 0 after 2 secs
+				while((gblCounter-startTime) <= 2000)
+				{
+					int pbVal_curr = in8(self->daio_portA_handle) & 0b00111000;
+					if(pbVal_last != pbVal_curr)
+					{
+						curr_signal = NO_SIGNAL;
+						break;
+					}
+					else if(pbVal_last == pbVal_curr)
+					{
+						curr_signal = ALL_HELD;
+					}
+				}
+				
+				break;
+
+
+			case 0b00100000: // 2. MODE : Toggle between km and miles
+				
+				while((gblCounter-startTime) <= 2000)
+				{
+					int pbVal_curr = in8(self->daio_portA_handle) & 0b00100000;
+					if(pbVal_last != pbVal_curr)
+					{
+						curr_signal = MODE;
+						break;
+					}
+					else if(pbVal_last == pbVal_curr)
+					{
+						curr_signal = MODE_HELD;
+					}
+				}
+
+				break;
+
+
+			case 0b00010000: // 3. SET : Stores mode and circumference values
+				
+				curr_signal = SET;
+				
+				break;
+
+
+			case 0b00001000: // 4. START/STOP: Starting and Stopping cyclometer
+				
+				if(self->lastStartStop == STOP)
+				{
+					curr_signal = START;
+				}
+				else if(self->lastStartStop == START)
+				{
+					curr_signal = STOP;
+				}
+				
+				break;
 		}
 
 	}

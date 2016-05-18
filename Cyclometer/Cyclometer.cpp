@@ -14,8 +14,11 @@
 
 struct sigevent event;
 int chid = 0;
+Signal last_signal = NO_SIGNAL;
+Signal curr_signal = NO_SIGNAL;
 
-int main ( int argc, char *argv[] ) {
+int main ( int argc, char *argv[] )
+{
 	
 	int pulse_id = 0 ;
 

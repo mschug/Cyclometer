@@ -28,6 +28,8 @@ public:
 	// Thread ID
 	pthread_t PushButtonDetectionThreadID;
 
+	Signal lastStartStop;
+
 	// Handle variables for DAIO Port A for input pulse detection
 	uintptr_t daio_ctrl_handle;
 	uintptr_t daio_portA_handle;
