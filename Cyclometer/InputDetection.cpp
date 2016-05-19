@@ -8,8 +8,9 @@
 #include "InputDetection.h"
 
 
-InputDetection::InputDetection(){
+InputDetection::InputDetection(StateContext* state_machine){
 
+	m_state_machine = state_machine;
 	// Some initializations
 	int privity_err;
 	
@@ -42,7 +43,7 @@ InputDetection::InputDetection(){
 					this);
 }
 
-
+InputDetection::InputDetection(){}
 InputDetection::~InputDetection() {
 
 	// Some uninitializations
@@ -68,6 +69,7 @@ void* InputDetection::InputDetectionThread(void* arg)
 		// check only the PIN connected to pulse generator
 		while( ( in8(((InputDetection*)arg)->daio_portC_handle) && 0x08) == 1)
 		{
+			((InputDetection*)arg)->m_state_machine->acceptSignal(PULSE);
 			// Reset watchdog
 			watchdogFlag = START_WATCHDOG;
 			// std::cout << "InputDetection::InputDetectionThread : START_WATCHDOG" << std::endl;

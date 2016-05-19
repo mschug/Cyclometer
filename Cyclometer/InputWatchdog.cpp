@@ -9,8 +9,9 @@
 
 Signal watchdogFlag = NO_SIGNAL;
 
-InputWatchdog::InputWatchdog(){
+InputWatchdog::InputWatchdog(StateContext* state_machine){
 
+	m_state_machine = state_machine;
 	watchdogTimer = 3000;
 
 	// Some initializations
@@ -35,6 +36,7 @@ InputWatchdog::InputWatchdog(){
 					this);
 }
 
+InputWatchdog::InputWatchdog(){}
 
 InputWatchdog::~InputWatchdog() {
 

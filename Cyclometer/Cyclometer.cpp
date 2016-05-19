@@ -22,10 +22,10 @@ int main ( int argc, char *argv[] )
 	// Global timer thread signals other threads to start
 
 	GlobalTimer globalTimer;
-	InputDetection inputDetection;
-	PushButtonDetection pushbuttonDetection;
-	InputWatchdog inputWatchdog;
 	StateContext stateMachine;
+	PushButtonDetection pushbuttonDetection(&stateMachine);
+	InputWatchdog inputWatchdog(&stateMachine);
+	InputDetection inputDetection(&stateMachine);
 	DisplayOperations displayOperations(&stateMachine);
 	InputCalculation inputCalculation(&stateMachine, &displayOperations);
 

@@ -19,10 +19,12 @@
 #include <inttypes.h>		// for ClockCycles() return value
 
 #include "Signals.h"
+#include "StateContext.h"
 
 class InputWatchdog
 {
-
+protected:
+	StateContext* m_state_machine;
 public:
 
 // Attributes
@@ -30,6 +32,7 @@ public:
 	unsigned long long watchdogTimer;  // 3 sec timer ==> 0.5ms * 6000
 
 // Methods
+	InputWatchdog(StateContext* state_machine);
 	InputWatchdog();	// constructor
 	~InputWatchdog();	// destructor
 

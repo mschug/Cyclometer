@@ -279,8 +279,14 @@ StateContext::StateContext()
 
 void StateContext::acceptSignal(Signal s)
 {
+	if (s != PULSE && s != NO_SIGNAL)
+	{
+		int dummy  = 0;
+		dummy = 1;
+	}
+
 	// Handle top-level transitions first
-	if (main_state == FULL_RESET && s == NO_SIGNAL)
+	if (main_state == FULL_RESET)
 	{
 		main_state = RUN_CYCLOMETER;
 		display_state = SET_UNITS;
@@ -308,6 +314,15 @@ void StateContext::acceptSignal(Signal s)
 	std::vector<int> current_transitions = state_table[display_state];
 	performTransition(current_transitions, s, display_state);
 
+	if (display_state == DISPLAY_DATA && display_state_internal == INVALID_STATE)
+	{
+		display_state_internal = DISPLAY_SPEED;
+	}
+	else if (display_state != DISPLAY_DATA)
+	{
+		display_state_internal = INVALID_STATE;
+	}
+
 	current_transitions = state_table[display_state_internal];
 	performTransition(current_transitions, s, display_state_internal);
 
@@ -318,6 +333,7 @@ void StateContext::acceptSignal(Signal s)
 	performTransition(current_transitions, s, detection_state);
 
 	current_transitions = state_table[watchdog_state];
+	StateEnum temp = watchdog_state;
 	performTransition(current_transitions, s, watchdog_state);
 }
 
@@ -329,8 +345,8 @@ void StateContext::performTransition(std::vector<int> current_transitions, Signa
 		int t = *it;
 		if (transitions.at(t)->getSignal() == s)
 		{
-			states[state]->exitAction();
-			states[transitions.at(t)->getNextState()]->entryAction();
+			//states[state]->exitAction();
+			//states[transitions.at(t)->getNextState()]->entryAction();
 			state = transitions.at(t)->getNextState();
 			break;
 		}

@@ -24,9 +24,13 @@ InputCalculation::InputCalculation(StateContext* state_machine, DisplayOperation
 
 void InputCalculation::notifyPulse(unsigned long long time)
 {
-	m_last_pulse_time = m_current_pulse_time;
-	m_current_pulse_time = time;
-	performCalculations();
+	StateEnum current_state = m_state_machine->getCalculationState();
+	if (current_state != MANUAL_OFF && current_state != INVALID_STATE)
+	{
+		m_last_pulse_time = m_current_pulse_time;
+		m_current_pulse_time = time;
+		performCalculations();
+	}
 }
 
 void InputCalculation::performCalculations()

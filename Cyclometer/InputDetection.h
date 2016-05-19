@@ -19,10 +19,12 @@
 #include <inttypes.h>		// for ClockCycles() return value
 
 #include "Signals.h"
+#include "StateContext.h"
 
 class InputDetection
 {
-
+protected:
+	StateContext* m_state_machine;
 public:
 
 	// Thread ID
@@ -32,6 +34,7 @@ public:
 	uintptr_t daio_ctrl_handle;
 	uintptr_t daio_portC_handle;
 
+	InputDetection(StateContext* state_machine);
 	InputDetection();	// constructor
 	~InputDetection();	// destructor
 

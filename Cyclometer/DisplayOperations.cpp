@@ -87,13 +87,18 @@ void* DisplayOperations::DisplayOperationsThread(void* arg)
         {
         	self->numberToOutput(output, self->m_speed);
 
-          if ((self->m_speed/100000) % 10 == 1) // Current is < 10
-            output[0] &= DECIMAL;
-          if ((self->m_speed/10000)  % 10 == 1) // Average is < 10
-            output[2] &= DECIMAL;
+			for (int i = 0; i < 3; i++)
+			{
+			  if (output[i] == BLANK) output[i] = ZERO;
+			}
 
-          output[1] &= DECIMAL;
-          self->sendOutput(output);
+			if ((self->m_speed/100000) % 10 == 1 || self->m_speed == 0) // Current is < 10
+				output[0] &= DECIMAL;
+			if ((self->m_speed/10000)  % 10 == 1 || self->m_speed == 0) // Average is < 10
+				output[2] &= DECIMAL;
+
+			output[1] &= DECIMAL;
+			self->sendOutput(output);
         }
         else if(internal_state == DISPLAY_DISTANCE)
         {
@@ -124,8 +129,6 @@ void* DisplayOperations::DisplayOperationsThread(void* arg)
         self->sendOutput(output);
         break;
     }
-
-    // Pause for 1/67 of a second - prevents flickering and reduces signals sent
   }
 
   return 0;
@@ -137,17 +140,16 @@ void DisplayOperations::numberToOutput(unsigned int* output, unsigned int num)
 {
   for (int i = 3; i >= 0; i--)
   {
-    if (num == 0)
-    {
-      output[i] = ((i == 3) ? ZERO : BLANK);
-    }
-
     // Store last digit in rightmost array position
     int last_digit = num % 10;
     switch(last_digit)
     {
       case 0:
         output[i] = ZERO;
+        if (num == 0 && i != 3)
+        {
+          output[i] = BLANK;
+        }
         break;
       case 1:
         output[i] = ONE;

@@ -8,7 +8,10 @@
 #include "PushButtonDetection.h"
 
 
-PushButtonDetection::PushButtonDetection(){
+PushButtonDetection::PushButtonDetection(StateContext* state_machine){
+
+	m_state_machine = state_machine;
+	lastStartStop = STOP;
 
 	// Some initializations
 	int privity_err;
@@ -42,6 +45,7 @@ PushButtonDetection::PushButtonDetection(){
 					this);
 }
 
+PushButtonDetection::PushButtonDetection(){}
 
 PushButtonDetection::~PushButtonDetection() {
 
@@ -173,7 +177,7 @@ void* PushButtonDetection::PushButtonDetectionThread(void* arg)
 
 			case 0b00000100:
 				// 5. START/STOP : Starting and Stopping cyclometer
-				if(self->lastStartStop == STOP)
+				if(self->lastStartStop == STOP || self->lastStartStop == STOP)
 				{
 					curr_signal = START;
 					msg = "START";
@@ -209,7 +213,7 @@ void* PushButtonDetection::PushButtonDetectionThread(void* arg)
 		}
 		std::cerr << "PushButtonDetection::PushButtonDetectionThread: " <<
 				"curr_signal: " << msg << std::endl;
-
+		self->m_state_machine->acceptSignal(curr_signal);
 	}
 	return 0;
 }
