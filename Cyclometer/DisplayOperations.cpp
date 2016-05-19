@@ -55,10 +55,16 @@ void* DisplayOperations::DisplayOperationsThread(void* arg)
   unsigned int output[4];
   std::cout << "DisplayOperations::DisplayOperationsThread" << endl;
 
+  unsigned long long start_time = 0;
+  unsigned int circumference_counter = 0;
+  bool cycling_circumference = false;
+
   while(true)
   {
     StateEnum state = self->m_state_machine->getDisplayState();
     StateEnum internal_state = self->m_state_machine->getDisplayStateInternal();
+
+    if (state != CYCLE_TIRE_CIRC) cycling_circumference = false;
 
     switch(state)
     {
@@ -75,9 +81,21 @@ void* DisplayOperations::DisplayOperationsThread(void* arg)
         self->sendOutput(output);
         break;
 
-      case SET_TIRE_CIRC:
       case CYCLE_TIRE_CIRC:
-        // Output current circumference
+    	  // Cycle circumference once per second if MODE is held
+    	  if (!cycling_circumference)
+    	  {
+    		  start_time = gblCounter;
+    		  cycling_circumference = true;
+    		  circumference_counter = 0;
+    	  }
+    	  if (((gblCounter - start_time) / 1000) > circumference_counter)
+    	  {
+    		  self->cycleCircumference();
+    		  circumference_counter++;
+    	  }
+      case SET_TIRE_CIRC:
+    	  // Output current circumference
     	  self->numberToOutput(output, self->m_circumference);
     	  self->sendOutput(output);
         break;
@@ -206,6 +224,14 @@ void DisplayOperations::sendOutput(unsigned int* output)
   out8(daio_portB_handle, val & FOURTH_DISPLAY); // Set anode 0 low
   out8(daio_portA_handle, output[3]);
   usleep(100);
+}
+
+/* Cycles the current circumference between 190 and 220.
+ * Circumference wraps from 220 back to 190 once 220 is reached. */
+void DisplayOperations::cycleCircumference()
+{
+	m_circumference++;
+	if(m_circumference > 220) m_circumference = 190;
 }
 
 DisplayOperations::DisplayOperations(){}

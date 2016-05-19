@@ -24,7 +24,6 @@ class StateContext
 {
 
 protected:
-
 	// Each state represents one orthogonal region
 	StateEnum main_state;
 	StateEnum display_state;
@@ -45,6 +44,7 @@ protected:
 	void performTransition(std::vector<int> transitions, Signal s, StateEnum &state);
 
 public:
+
 	// Threads can access current states but cannot directly modify them
 	StateEnum getMainState() {return main_state;}
 	StateEnum getDisplayState() {return display_state;}

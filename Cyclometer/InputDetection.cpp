@@ -8,9 +8,10 @@
 #include "InputDetection.h"
 
 
-InputDetection::InputDetection(StateContext* state_machine){
+InputDetection::InputDetection(StateContext* state_machine, DisplayOperations* display){
 
 	m_state_machine = state_machine;
+	m_display = display;
 	// Some initializations
 	int privity_err;
 	

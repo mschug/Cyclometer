@@ -23,12 +23,11 @@ int main ( int argc, char *argv[] )
 
 	GlobalTimer globalTimer;
 	StateContext stateMachine;
-	PushButtonDetection pushbuttonDetection(&stateMachine);
 	InputWatchdog inputWatchdog(&stateMachine);
-	InputDetection inputDetection(&stateMachine);
 	DisplayOperations displayOperations(&stateMachine);
+	InputDetection inputDetection(&stateMachine, &displayOperations);
 	InputCalculation inputCalculation(&stateMachine, &displayOperations);
-
+	PushButtonDetection pushbuttonDetection(&stateMachine, &displayOperations, &inputCalculation);
 
 	return EXIT_SUCCESS;
 }

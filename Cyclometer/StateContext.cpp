@@ -333,7 +333,6 @@ void StateContext::acceptSignal(Signal s)
 	performTransition(current_transitions, s, detection_state);
 
 	current_transitions = state_table[watchdog_state];
-	StateEnum temp = watchdog_state;
 	performTransition(current_transitions, s, watchdog_state);
 }
 

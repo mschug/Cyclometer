@@ -8,9 +8,11 @@
 #include "PushButtonDetection.h"
 
 
-PushButtonDetection::PushButtonDetection(StateContext* state_machine){
+PushButtonDetection::PushButtonDetection(StateContext* state_machine, DisplayOperations* display, InputCalculation* calculation){
 
 	m_state_machine = state_machine;
+	m_display = display;
+	m_calculation = calculation;
 	lastStartStop = STOP;
 
 	// Some initializations
@@ -119,6 +121,13 @@ void* PushButtonDetection::PushButtonDetectionThread(void* arg)
 			case 0b00000000: // None pressed or all released
 				curr_signal = NO_SIGNAL;
 				msg = "NO_SIGNAL";
+
+				if (last_signal == MODE_HELD || last_signal == MODE)
+				{
+					curr_signal = MODE_RELEASED;
+					msg = "MODE_RELEASED";
+				}
+
 				break;
 
 			case 0b00000111: // 1. MODE+SET+START/STOP : >=2 secs : FULL RESET
@@ -155,6 +164,15 @@ void* PushButtonDetection::PushButtonDetectionThread(void* arg)
 					{
 						curr_signal = MODE;
 						msg = "MODE";
+
+						if (self->m_state_machine->getDisplayState() == SET_UNITS)
+						{
+							self->m_display->changeMode();
+						}
+						else if (self->m_state_machine->getDisplayState() == SET_TIRE_CIRC)
+						{
+							self->m_display->cycleCircumference();
+						}
 						break;
 					}
 					else if(pbVal_last == pbVal_curr)
@@ -172,6 +190,18 @@ void* PushButtonDetection::PushButtonDetectionThread(void* arg)
 				curr_signal = SET;
 				msg = "SET";
 				
+				if (self->m_state_machine->getDisplayStateInternal() == DISPLAY_DISTANCE ||
+					self->m_state_machine->getDisplayStateInternal() == DISPLAY_TIME)
+				{
+					curr_signal = CHANGE_CALC_MODE;
+					msg = "CHANGE_CALC_MODE";
+				}
+				else if (self->m_state_machine->getDisplayStateInternal() == DISPLAY_SPEED)
+				{
+					curr_signal = CHANGE_TIRE_CIRC;
+					msg = "CHANGE_TIRE_CIRC";
+				}
+
 				break;
 
 
@@ -206,6 +236,11 @@ void* PushButtonDetection::PushButtonDetectionThread(void* arg)
 					{
 						curr_signal = MODE_START_HELD;
 						msg = "MODE_START_HELD";
+
+						if (self->m_state_machine->getDisplayState() == DISPLAY_DATA)
+						{
+							self->m_calculation->resetTripValues();
+						}
 					}
 				}
 
@@ -214,6 +249,7 @@ void* PushButtonDetection::PushButtonDetectionThread(void* arg)
 		std::cerr << "PushButtonDetection::PushButtonDetectionThread: " <<
 				"curr_signal: " << msg << std::endl;
 		self->m_state_machine->acceptSignal(curr_signal);
+		last_signal = curr_signal;
 	}
 	return 0;
 }

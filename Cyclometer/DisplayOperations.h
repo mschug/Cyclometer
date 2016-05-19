@@ -78,6 +78,9 @@ public:
 	void setDistance(unsigned int distance) { m_distance = distance; }
 	void setTime(unsigned int trip_time)    { m_time = trip_time; }
 
+	void changeMode() { m_display_mode = (m_display_mode == KILOMETERS ? MILES : KILOMETERS); }
+	void cycleCircumference();
+
 	// Thread initialization
 	pthread_t DisplayOperationsThreadID;
 	static void* DisplayOperationsThread(void* arg);

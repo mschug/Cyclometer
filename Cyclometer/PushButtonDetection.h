@@ -20,12 +20,16 @@
 
 #include <string>
 #include "Signals.h"
+#include "DisplayOperations.h"
+#include "InputCalculation.h"
 #include "StateContext.h"
 
 class PushButtonDetection
 {
 protected:
 	StateContext* m_state_machine;
+	DisplayOperations* m_display;
+	InputCalculation* m_calculation;
 
 public:
 
@@ -38,7 +42,7 @@ public:
 	uintptr_t daio_ctrl_handle;
 	uintptr_t daio_portC_handle;
 
-	PushButtonDetection(StateContext* state_machine);
+	PushButtonDetection(StateContext* state_machine, DisplayOperations* display, InputCalculation* calculation);
 	PushButtonDetection();	// constructor
 	~PushButtonDetection();	// destructor
 
