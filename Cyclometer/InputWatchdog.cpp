@@ -50,7 +50,7 @@ void* InputWatchdog::InputWatchdogThread(void* arg)
 	((InputWatchdog*)arg)->watchdogTimer = 3000;  // 3 sec timer ==> 0.5ms * 6000
 
 	while( true ) {
-		std::cout << "InputWatchdog::InputWatchdogThread" << std::endl;
+		//std::cout << "InputWatchdog::InputWatchdogThread" << std::endl;
 		
 		while( watchdogFlag != START_WATCHDOG &&
 				watchdogFlag == STOP_WATCHDOG)

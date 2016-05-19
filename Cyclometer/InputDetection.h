@@ -21,12 +21,14 @@
 #include "Signals.h"
 #include "DisplayOperations.h"
 #include "StateContext.h"
+#include "InputCalculation.h"
 
 class InputDetection
 {
 protected:
 	StateContext* m_state_machine;
 	DisplayOperations* m_display;
+	InputCalculation* m_calculation;
 public:
 
 	// Thread ID
@@ -36,7 +38,7 @@ public:
 	uintptr_t daio_ctrl_handle;
 	uintptr_t daio_portC_handle;
 
-	InputDetection(StateContext* state_machine, DisplayOperations* display);
+	InputDetection(StateContext* state_machine, DisplayOperations* display, InputCalculation* calculation);
 	InputDetection();	// constructor
 	~InputDetection();	// destructor
 

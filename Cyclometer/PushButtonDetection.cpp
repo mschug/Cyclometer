@@ -86,16 +86,16 @@ void* PushButtonDetection::PushButtonDetectionThread(void* arg)
 	while(true)
 	{
 		std::string msg = "NO_SIGNAL";
-		std::cout << "PushButtonDetection::PushButtonDetectionThread" << std::endl;
+		//std::cout << "PushButtonDetection::PushButtonDetectionThread" << std::endl;
 		
 		// Read DAIO C0, C1 and C2 pins only
 		//  DAIO C0 - MODE
 		//  DAIO C1 - SET
 		//  DAIO C2 - START/STOP
 		pbVal_last = in8(self->daio_portC_handle);// & 0b00000111;
-		std::cerr << pbVal_last << std::endl;
+		//std::cerr << pbVal_last << std::endl;
 		int val = in8(self->daio_ctrl_handle);
-		std::cerr << val << std::endl;
+		//std::cerr << val << std::endl;
 
 		// Know the initial time for further calculations
 		startTime = gblCounter;
@@ -246,8 +246,8 @@ void* PushButtonDetection::PushButtonDetectionThread(void* arg)
 
 				break;
 		}
-		std::cerr << "PushButtonDetection::PushButtonDetectionThread: " <<
-				"curr_signal: " << msg << std::endl;
+		//std::cerr << "PushButtonDetection::PushButtonDetectionThread: " <<
+		//		"curr_signal: " << msg << std::endl;
 		self->m_state_machine->acceptSignal(curr_signal);
 		last_signal = curr_signal;
 	}

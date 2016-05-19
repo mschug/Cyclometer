@@ -20,15 +20,19 @@ InputCalculation::InputCalculation(StateContext* state_machine, DisplayOperation
 	m_distance = 0;
 	m_average_speed = 0;
 	m_current_speed = 0;
+	m_total_speed = 0;
+	m_total_pulses = 0;
 }
 
-void InputCalculation::notifyPulse(unsigned long long time)
+void InputCalculation::notifyPulse()
 {
 	StateEnum current_state = m_state_machine->getCalculationState();
 	if (current_state != MANUAL_OFF && current_state != INVALID_STATE)
 	{
+		m_total_pulses++;
 		m_last_pulse_time = m_current_pulse_time;
-		m_current_pulse_time = time;
+		m_current_pulse_time = gblCounter;
+		if (m_last_pulse_time == 0) m_last_pulse_time = m_current_pulse_time;
 		performCalculations();
 	}
 }
@@ -37,15 +41,24 @@ void InputCalculation::performCalculations()
 {
 	unsigned long long difference = m_current_pulse_time - m_last_pulse_time;
 
-	// v = d/t = circumference/difference with units cm/.5msec
-	// Convert from cm/.5msec to km/hr by multiplying by 18
-	m_current_speed = (m_display->getCircumference() / difference) * 18;
+	// v = d/t = circumference/difference with units cm/msec
+	// Convert from cm/msec to km/hr by multiplying by 36
+	if (difference > 0)
+		m_current_speed = (((float) m_display->getCircumference()) / difference) * 36;
 
 	// Convert from km to cm by multiplying by 10^-5
-	m_distance += (m_display->getCircumference() / 100000);
+	m_distance += (m_display->getCircumference() *.00001);
+	m_total_speed += m_current_speed;
 
-	// avg(v) = sum(d) / sum(t)
-	m_average_speed = (m_distance / m_trip_time) * 18;
+	// avg(v) = sum(v) / # measurements
+	if (difference > 0)
+		m_average_speed = m_total_speed / ((float) m_total_pulses);
+
+	std::cout << difference << " " << m_current_speed << " " << m_average_speed << " " << m_distance << " " << m_total_pulses << std::endl;
+
+	calculateTripTime();
+	calculateDistance();
+	calculateSpeed();
 }
 
 /* Zero out all values but remain in current mode */
@@ -57,6 +70,8 @@ void InputCalculation::resetTripValues()
 	m_distance = 0;
 	m_average_speed = 0;
 	m_current_speed = 0;
+	m_total_speed = 0;
+	m_total_pulses = 0;
 }
 
 /* Increments the trip time if the cyclometer detects motion.

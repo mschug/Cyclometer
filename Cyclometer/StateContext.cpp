@@ -279,12 +279,6 @@ StateContext::StateContext()
 
 void StateContext::acceptSignal(Signal s)
 {
-	if (s != PULSE && s != NO_SIGNAL)
-	{
-		int dummy  = 0;
-		dummy = 1;
-	}
-
 	// Handle top-level transitions first
 	if (main_state == FULL_RESET)
 	{

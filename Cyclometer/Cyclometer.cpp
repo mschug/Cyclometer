@@ -25,8 +25,8 @@ int main ( int argc, char *argv[] )
 	StateContext stateMachine;
 	InputWatchdog inputWatchdog(&stateMachine);
 	DisplayOperations displayOperations(&stateMachine);
-	InputDetection inputDetection(&stateMachine, &displayOperations);
 	InputCalculation inputCalculation(&stateMachine, &displayOperations);
+	InputDetection inputDetection(&stateMachine, &displayOperations, &inputCalculation);
 	PushButtonDetection pushbuttonDetection(&stateMachine, &displayOperations, &inputCalculation);
 
 	return EXIT_SUCCESS;

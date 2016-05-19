@@ -10,18 +10,19 @@
 
 #include "DisplayOperations.h"
 #include "StateContext.h"
+#include "GlobalTimer.h"
 
 class InputCalculation
 {
 protected:
 	unsigned long long m_last_pulse_time, m_current_pulse_time;
-	unsigned long long m_total_cycles;
 	unsigned int m_trip_time;
+	int m_total_pulses;
 
 	// Stored in kilometers to make calculation easier.
 	// Convert to miles by dividing with 1.618.
 	float m_distance;
-	float m_average_speed, m_current_speed;
+	float m_average_speed, m_current_speed, m_total_speed;
 
 	DisplayOperations* m_display;
 	StateContext* m_state_machine;
@@ -36,7 +37,7 @@ public:
 	void updateTripTime();
 	void startTrip();
 	void stopTrip();
-	void notifyPulse(unsigned long long time);
+	void notifyPulse();
 	void resetTripValues();
 	InputCalculation(StateContext* state_machine, DisplayOperations* display);
 	~InputCalculation();

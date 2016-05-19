@@ -8,9 +8,10 @@
 #include "InputDetection.h"
 
 
-InputDetection::InputDetection(StateContext* state_machine, DisplayOperations* display){
+InputDetection::InputDetection(StateContext* state_machine, DisplayOperations* display, InputCalculation* calculation){
 
 	m_state_machine = state_machine;
+	m_calculation = calculation;
 	m_display = display;
 	// Some initializations
 	int privity_err;
@@ -54,6 +55,8 @@ InputDetection::~InputDetection() {
 
 void* InputDetection::InputDetectionThread(void* arg)
 {
+	std::cout << "InputDetection::InputDetectionThread" << std::endl;
+
     // Give this thread root permissions to access the hardware
     int privity_err = ThreadCtl(_NTO_TCTL_IO, NULL);
     if (privity_err == -1) {
@@ -63,14 +66,19 @@ void* InputDetection::InputDetectionThread(void* arg)
 
 	//bool inputPulseDetected = false;
 	watchdogFlag = UNKNOWN_SIGNAL;
+	bool pulseFlag = false;
 
 	while(true)
 	{
-		std::cout << "InputDetection::InputDetectionThread" << std::endl;
 		// check only the PIN connected to pulse generator
-		while( ( in8(((InputDetection*)arg)->daio_portC_handle) && 0x08) == 1)
+		while( ( in8(((InputDetection*)arg)->daio_portC_handle) & 0x08))
 		{
-			((InputDetection*)arg)->m_state_machine->acceptSignal(PULSE);
+			if (!pulseFlag)
+			{
+				((InputDetection*)arg)->m_state_machine->acceptSignal(PULSE);
+				((InputDetection*)arg)->m_calculation->notifyPulse();
+				pulseFlag = true;
+			}
 			// Reset watchdog
 			watchdogFlag = START_WATCHDOG;
 			// std::cout << "InputDetection::InputDetectionThread : START_WATCHDOG" << std::endl;
@@ -79,7 +87,9 @@ void* InputDetection::InputDetectionThread(void* arg)
 
 		}
 
-		while( ( in8(((InputDetection*)arg)->daio_portC_handle) && 0x08) == 0)
+		pulseFlag = false;
+
+		while( ( in8(((InputDetection*)arg)->daio_portC_handle) & 0x08))
 		{
 			// Stop resetting watchdog
 			watchdogFlag = STOP_WATCHDOG;
