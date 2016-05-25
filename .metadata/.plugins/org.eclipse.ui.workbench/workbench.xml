@@ -80,7 +80,7 @@
 </editor>
 <editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="InputCalculation.cpp" partName="InputCalculation.cpp" path="D:/Actual Cyclometer Folder/Cyclometer/Cyclometer/InputCalculation.cpp" title="InputCalculation.cpp" tooltip="Cyclometer/InputCalculation.cpp" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Cyclometer/InputCalculation.cpp"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2272" selectionTopPixel="1027"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="123" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="FullResetState.cpp" partName="FullResetState.cpp" path="D:/Cyclometer/Cyclometer/FullResetState.cpp" title="FullResetState.cpp" tooltip="Cyclometer/FullResetState.cpp" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Cyclometer/FullResetState.cpp"/>
@@ -149,6 +149,10 @@
 <view id="org.eclipse.tm.terminal.view.TerminalView" partName="Terminal"/>
 <view id="org.eclipse.ui.views.ProblemView" partName="Problems">
 <viewState PRIMARY_SORT_FIELD="org.eclipse.ui.ide.severityAndDescriptionField" categoryGroup="org.eclipse.ui.ide.severity" markerContentGenerator="org.eclipse.ui.ide.problemsGenerator" partName="Problems">
+<expanded>
+<category IMemento.internal.id="Warnings"/>
+<category IMemento.internal.id="Errors"/>
+</expanded>
 <columnWidths org.eclipse.ui.ide.locationField="64" org.eclipse.ui.ide.markerType="94" org.eclipse.ui.ide.pathField="124" org.eclipse.ui.ide.resourceField="94" org.eclipse.ui.ide.severityAndDescriptionField="300"/>
 <visible IMemento.internal.id="org.eclipse.ui.ide.severityAndDescriptionField"/>
 <visible IMemento.internal.id="org.eclipse.ui.ide.resourceField"/>
@@ -509,7 +513,7 @@
 </folder>
 </info>
 <info part="org.eclipse.ui.editorss" ratio="0.21007502" ratioLeft="196" ratioRight="737" relationship="2" relative="topLeft"/>
-<info folder="true" part="bottom" ratio="0.7496136" ratioLeft="485" ratioRight="162" relationship="4" relative="org.eclipse.ui.editorss">
+<info folder="true" part="bottom" ratio="0.5772532" ratioLeft="538" ratioRight="394" relationship="4" relative="org.eclipse.ui.editorss">
 <folder activePageID="org.eclipse.ui.views.ProblemView" appearance="2" expanded="2">
 <page content="org.eclipse.ui.views.ProblemView" label="Problems"/>
 <page content="org.eclipse.ui.views.TaskList" label="Tasks"/>
@@ -548,9 +552,6 @@
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/Cyclometer/DisplayOperations.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/Cyclometer/InputDetection.cpp"/>
 </editors>
-<item historyLabel="InputCalculation.h" index="2">
-<position info="not_deleted" x="818" y="0"/>
-</item>
 <item historyLabel="InputCalculation.h" index="2">
 <position info="not_deleted" x="549" y="0"/>
 </item>
@@ -695,8 +696,11 @@
 <item historyLabel="InputCalculation.cpp" index="1">
 <position info="not_deleted" x="377" y="0"/>
 </item>
-<item active="true" historyLabel="InputCalculation.cpp" index="1">
+<item historyLabel="InputCalculation.cpp" index="1">
 <position info="not_deleted" x="2412" y="0"/>
+</item>
+<item active="true" historyLabel="InputCalculation.cpp" index="1">
+<position info="not_deleted" x="0" y="0"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -704,12 +708,6 @@
 <workbenchWindowAdvisor/>
 <actionBarAdvisor/>
 <trimLayout>
-<trimArea IMemento.internal.id="16384">
-<trimItem IMemento.internal.id="topLeft"/>
-</trimArea>
-<trimArea IMemento.internal.id="131072">
-<trimItem IMemento.internal.id="topRight"/>
-</trimArea>
 <trimArea IMemento.internal.id="128">
 <trimItem IMemento.internal.id="org.eclipse.ui.internal.WorkbenchWindow.topBar"/>
 </trimArea>
@@ -717,7 +715,6 @@
 <trimItem IMemento.internal.id="org.eclise.ui.internal.FastViewBar"/>
 <trimItem IMemento.internal.id="org.eclipse.jface.action.StatusLineManager"/>
 <trimItem IMemento.internal.id="org.eclipse.ui.internal.progress.ProgressRegion"/>
-<trimItem IMemento.internal.id="bottom"/>
 </trimArea>
 </trimLayout>
 </window>

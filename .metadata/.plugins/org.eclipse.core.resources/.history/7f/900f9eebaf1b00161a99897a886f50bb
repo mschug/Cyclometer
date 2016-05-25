@@ -1,0 +1,69 @@
+/*
+ * InputCalculation.cpp
+ *
+ *  Created on: May 5, 2016
+ *      Author: mss9627
+ */
+
+#include "InputCalculation.h"
+
+InputCalculation::InputCalculation(DisplayOperations* display)
+{
+	m_display = display;
+	m_last_pulse_time = 0;
+	m_current_pulse_time = 0;
+	m_pulses = 0;
+	m_trip_time = 0;
+
+	// Stored in kilometers to make calculation easier.
+	// Convert to miles by multiplying with 1.618.
+	m_distance = 0;
+	m_average_speed = 0;
+	m_current_speed = 0;
+}
+
+void InputCalculation::notifyPulse(unsigned long long time)
+{
+	m_last_pulse_time = m_current_pulse_time;
+	m_current_pulse_time = time;
+	performCalculations();
+}
+
+void InputCalculation::performCalculations()
+{
+	unsigned long long difference = m_current_pulse_time - m_last_pulse_time;
+	m_trip_time += difference;
+
+	// v = d/t = circumference/difference cm/.5msec
+	// Convert from cm/.5msec to km/hr by multiplying by 18
+	m_current_speed =
+}
+
+/* Zero out all values but remain in current mode */
+void InputCalculation::resetTripValues()
+{
+	m_last_pulse_time = 0;
+	m_current_pulse_time = 0;
+	m_pulses = 0;
+	m_trip_time = 0;
+	m_distance = 0;
+	m_average_speed = 0;
+	m_current_speed = 0;
+}
+
+unsigned int InputCalculation::getTripTime()
+{
+	// TODO: Initialize timer thread
+}
+
+unsigned int InputCalculation::getDistance()
+{
+
+}
+
+unsigned int InputCalculation::getSpeeds()
+{
+
+}
+
+InputCalculation::~InputCalculation(){}
